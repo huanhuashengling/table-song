@@ -47,4 +47,4 @@ npm run server  // 启动服务
 
 
 **参考仓库地址**
-## 本项目foke 从https://github.com/cd-dongzi/vue-node-blog 所以感谢cd-dongzi
+## [本项目fork地址](https://github.com/cd-dongzi/vue-node-blog) 所以要感谢[cd-dongzi](https://github.com/cd-dongzi)
