@@ -1,9 +1,26 @@
 import axios from 'src/utils/fetch'
-import { blogTypes } from './classify'
+import { blogTypes, sexTypes, ethnics, nations, healthStatuses, householdTypes, politicalStatuses, switchStates} from './classify'
+import { studentSources, notMainlands, admissionModes, bloodTypes, residentTypes, leftChildrenTypes, vehicles} from './classify'
+import { relations } from './classify'
 
 const music = {
 	state: {
 		blogTypes,
+		sexTypes,
+		nations,
+		healthStatuses,
+		ethnics,
+		studentSources,
+		householdTypes,
+		politicalStatuses,
+		leftChildrenTypes,
+		notMainlands, 
+		admissionModes, 
+		vehicles, 
+		switchStates,
+		residentTypes,
+		relations,
+		bloodTypes,
 		list: [],
 		total: 0
 	},

@@ -72,13 +72,31 @@
                         width: ''
                     },
                     {
-                        label: '类型',
+                        label: '身份证件类型',
                         prop: 'type',
                         hidden: false,
                         headerAlign: 'center',
                         align: 'center',
                         width: '',
-                        filters: blogFilters                   
+                        // filters: blogFilters                   
+                    },
+                    {
+                        label: '姓名',
+                        prop: 'studentName',
+                        hidden: false,
+                        headerAlign: 'center',
+                        align: 'center',
+                        width: '',
+                        sort: true
+                    },
+                    {
+                        label: '性别',
+                        prop: 'sexType',
+                        hidden: false,
+                        headerAlign: 'center',
+                        align: 'center',
+                        width: '',
+                        sort: true
                     },
                     {
                         label: '标题',

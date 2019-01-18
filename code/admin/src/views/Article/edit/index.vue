@@ -1,9 +1,18 @@
 <template>
-    <el-dialog title="歌曲编辑" :visible.sync="dialogTableVisible" class="edit-wrapper" @close="close" width="80%">
+    <el-dialog title="学籍信息更新" :visible.sync="dialogTableVisible" class="edit-wrapper" @close="close" width="80%">
         <el-form :model="info" :rules="rules" ref="form" label-width="100px" class="form">
-            <el-form-item label="音乐类型" prop="type">
-                <el-select v-model="info.type" multiple clearable placeholder="请选择音乐类型" class="block">
+            <el-form-item label="身份证件类型" prop="type">
+                <el-select v-model="info.type" clearable placeholder="请选择身份证件类型" class="block">
                     <el-option v-for="item in blogTypes" :key="item.name" :label="item.name" :value="item.name">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="学生姓名" prop="studentName">
+                <el-input type="text" v-model="info.studentName"></el-input>
+            </el-form-item>
+            <el-form-item label="性别" prop="sexType">
+                <el-select v-model="info.sexType" clearable placeholder="请选择性别" class="block">
+                    <el-option v-for="item in sexTypes" :key="item.name" :label="item.name" :value="item.name">
                     </el-option>
                 </el-select>
             </el-form-item>
@@ -56,8 +65,17 @@
                 dialogTableVisible: true,
                 loading: false,
                 rules: {
+                    sexType: [
+                        { required: true, message: '请选择性别', trigger: 'change', type: 'string' }
+                    ],
                     type: [
-                        { required: true, message: '请选择至少选择一个文章类型', trigger: 'change', type: 'array' }
+                        { required: true, message: '请选择身份证件类型', trigger: 'change', type: 'string' }
+                    ],
+                    studentName: [
+                        { required: true, message: '请填写学生姓名', trigger: 'blur', type: 'string' }
+                    ],
+                    studentID: [
+                        { required: true, message: '请填写身份证件号码', trigger: 'blur', type: 'string' }
                     ],
                     title: [
                         { required: true, message: '请填写文章标题', trigger: 'blur' }
@@ -105,6 +123,7 @@
         computed: {
             ...mapGetters([
                 'blogTypes',
+                'sexTypes',
                 'sources'
             ])
         }

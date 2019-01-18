@@ -6,6 +6,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from './utils/fetch'
 import customComponents from './custom-components.js'
+// import {Message} from 'iview'
 
 import './styles/index.css'
 import './styles/index.less'
@@ -20,6 +21,7 @@ Object.keys(filters).forEach(key => {
 Vue.use(ElementUI)
 Vue.use(customComponents)
 Vue.prototype.axios = axios
+// Vue.prototype.$Message = Message
 
 new Vue({
     el: '#app',

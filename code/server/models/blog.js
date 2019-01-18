@@ -1,6 +1,9 @@
 import db from '../mongodb'
 let blogSchema = db.Schema({
-    type: Array,
+    type: String,
+    sexType: String,
+    studentName: String,
+    studentID: String,
     title: String,
     desc: String,
     html: String,
