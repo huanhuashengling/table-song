@@ -85,8 +85,8 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="身份证件类型" prop="type">
-                        <el-select v-model="info.type" clearable placeholder="请选择身份证件类型" class="block">
-                            <el-option v-for="item in blogTypes" :key="item.id" :label="item.name" :value="item.id">
+                        <el-select v-model="info.IDType" clearable placeholder="请选择身份证件类型" class="block">
+                            <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -301,7 +301,7 @@
     import { regionData } from 'element-china-area-data'
     import { provinceAndCityData } from 'element-china-area-data'
     export default {
-        components: { Markdown },
+        // components: { Markdown },
         data() {
             return {
                 errors: [],
@@ -481,10 +481,10 @@
                 this.$refs[formName].validate( async (valid) => {
                     if (valid) {
                         try{
-                            this.info.html = this.info.markdown
-                            await this.$store.dispatch('addBlog', this.info);
+                            // this.info.html = this.info.markdown
+                            await this.$store.dispatch('addStudent', this.info);
                             this.loading = false
-                            this.$router.push('/article/list')
+                            this.$router.push('/student/list')
                         }catch(e) {
                             this.loading = false
                         }
@@ -507,7 +507,7 @@
         },
         computed: {
             ...mapGetters([
-                'blogTypes',
+                'IDTypes',
                 'sexTypes',
                 'ethnics',
                 'nations',

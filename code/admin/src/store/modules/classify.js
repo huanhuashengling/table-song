@@ -18,7 +18,7 @@ export const politicalStatuses = [
     { id: "04",  name: '少先队员' },
     { id: "05",  name: '群众' }] 
 //博客分类
-export const blogTypes = [ 
+export const IDTypes = [ 
     { id: "01", name: '居民身份证' },
     { id: "02", name: '香港特区护照/身份证明' },
     { id: "03", name: '澳门特区护照/身份证明' },

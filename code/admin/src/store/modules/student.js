@@ -25,15 +25,15 @@ const music = {
 		total: 0
 	},
 	mutations: {
-		BLOGLIST (state, data) {
+		STUDENTLIST (state, data) {
 			state.list = data.data.list;
 			state.total = data.data.total;
 		}
 	},
 	actions: {
-		addBlog ({commit}, info) {
+		addStudent ({commit}, info) {
 			return new Promise( (resolve, reject) => {
-				axios.postFile('blog/add', info)
+				axios.postFile('student/add', info)
 					.then( res => {
 						resolve(res)
 					}).catch( err => {
@@ -42,20 +42,20 @@ const music = {
 			})
 		},
 
-		getBlogList ({commit}, params) {
+		getStudentList ({commit}, params) {
 			return new Promise( (resolve, reject) => {
-				axios.get('blog/list', params)
+				axios.get('student/list', params)
 					.then( res => {
-						commit('BLOGLIST', res)
+						commit('STUDENTLIST', res)
 						resolve(res)
 					}).catch( err => {
 						reject(err)
 					})
 			})
 		},
-		delBlog ({commit}, id) {
+		delStudent ({commit}, id) {
 			return new Promise( (resolve, reject) => {
-				axios.get('blog/del', {id: id})
+				axios.get('student/del', {id: id})
 					.then( res => {
 						resolve(res)
 					}).catch( err => {
@@ -63,9 +63,9 @@ const music = {
 					})
 			})
 		},
-		updateBlog ({commit}, info) {
+		updateStudent ({commit}, info) {
 			return new Promise( (resolve, reject) => {
-				axios.postFile('blog/update', info)
+				axios.postFile('student/update', info)
 					.then( res => {
 						resolve(res)
 					}).catch( err => {
