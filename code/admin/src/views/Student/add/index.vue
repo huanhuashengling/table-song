@@ -48,7 +48,7 @@
                         <el-cascader
                         size="medium"
                         :options="birthPlaceOptions"
-                        v-model="info.selectedBirthPlaceOptions"
+                        v-model="info.brithPlaceCode"
                         @change="handleBirthPlaceChange">
                         </el-cascader>
                     </el-form-item>
@@ -58,7 +58,7 @@
                         <el-cascader
                         size="large"
                         :options="grandPlaceOptions"
-                        v-model="info.selectedGrandPlaceOptions"
+                        v-model="info.grandPlaceCode"
                         @change="handleGrandPlaceChange">
                         </el-cascader>
                     </el-form-item>
@@ -104,7 +104,7 @@
                         <el-cascader
                         size="large"
                         :options="householdPlaceOptions"
-                        v-model="info.selectedHouseholdPlaceOptions"
+                        v-model="info.householdPlaceCode"
                         @change="handleHouseholdPlaceChange">
                         </el-cascader>
                     </el-form-item>
@@ -148,12 +148,18 @@
             <el-row>
                 <el-col :span="4">
                     <el-form-item label="是否独生子女" prop="isOneChild" class="left-item">
-                        <el-switch v-model="info.isOneChild"></el-switch>
+                        <el-select v-model="info.isOneChild" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4">
                     <el-form-item label="是否双女户" prop="hasDoubleGirls" class="left-item">
-                        <el-switch v-model="info.hasDoubleGirls"></el-switch>
+                        <el-select v-model="info.hasDoubleGirls" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -166,7 +172,10 @@
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="进城务工随迁子女" prop="withEnterCities" class="left-item">
-                        <el-switch v-model="info.withEnterCities"></el-switch>
+                        <el-select v-model="info.withEnterCities" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -180,7 +189,10 @@
                 </el-col>
                 <el-col :span="4">
                     <el-form-item label="乘坐校车" prop="schoolbus" class="left-item">
-                        <el-switch v-model="info.schoolbus"></el-switch>
+                        <el-select v-model="info.schoolbus" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
@@ -212,14 +224,17 @@
                         <el-cascader
                         size="large"
                         :options="householdPlaceOptions"
-                        v-model="info.selectedHouseholdPlaceOptions"
+                        v-model="info.householdPlaceCode1"
                         @change="handleHouseholdPlaceChange">
                         </el-cascader>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="是否监护人" prop="keeper1" class="left-item">
-                        <el-switch v-model="info.keeper1"></el-switch>
+                        <el-select v-model="info.keeper1" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -255,14 +270,17 @@
                         <el-cascader
                         size="large"
                         :options="householdPlaceOptions"
-                        v-model="info.selectedHouseholdPlaceOptions"
+                        v-model="info.householdPlaceCode2"
                         @change="handleHouseholdPlaceChange">
                         </el-cascader>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="是否监护人" prop="keeper2" class="left-item">
-                        <el-switch v-model="info.keeper2"></el-switch>
+                        <el-select v-model="info.keeper2" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -310,8 +328,8 @@
                     studentName: '',                //1  姓名
                     sexType: '',                    //2  性别
                     birthDate: '',                  //3  出生日期    不显示  从身份证获取
-                    selectedBrithPlaceOptions: [],  //4  出生地
-                    selectedGrandPlaceOptions: [],  //5  籍贯
+                    brithPlaceCode: [],             //4  出生地
+                    grandPlaceCode:[],              //5  籍贯
                     ethnic: '01',                   //6  民族           默认汉族
                     nation: 'CN',                   //7  国家地区        默认中国
                     contactPhoneNumber: '',         //31 联系电话
@@ -321,8 +339,8 @@
                     politicalStatus: '',            //11  政治面貌    不显示  默认少先队员
                     healthStatus: '健康或良好',       //12  健康状况    不显示  默认健康或良好
                     //------学生个人辅助信息
-                    selectedHouseholdPlaceOptions: [],
-                    householdPlaceCode: '',         //17  户口所在地
+                    
+                    householdPlaceCode: [],         //17  户口所在地
                     householdType: '',              //18  户口性质
                     strongPoint: '',                //19  特长
                     //------学生学籍辅助信息
@@ -350,26 +368,29 @@
                     govBuySeat: '02',               //43  是否政府购买学位
                     needHelp: '02',                 //44  是否需要申请资助
                     enjoyHelp: '02',                //45  是否享受一补
-                    hasDoubleGirls: '02',
+                    hasDoubleGirls: '',
                     //------学生上下学交通方式
                     distance: '',                   //46  上下学距离
-                    vehicle: '01',                  //47  交通方式
-                    schoolbus: false,                  //48  是否需要校车
+                    vehicle: '',                  //47  交通方式
+                    schoolbus: '02',                  //48  是否需要校车
                     //-------学生家庭成员或监护人信息一
                     keeper1Name: '',
                     relation1: '01',
-                    keeper1: true,
-                    householdPlaceCode1: '',
+                    keeper1: '02',
+                    householdPlaceCode1: [],
                     contact1PhoneNumber: '',
                     address1: '',
                     //-------学生家庭成员或监护人信息二
                     keeper2Name: '',
                     relation2: '02',
-                    keeper2: true,
-                    householdPlaceCode2: '',
+                    keeper2: '02',
+                    householdPlaceCode2: [],
                     contact2PhoneNumber: '',
                     address2: '',
                 },
+                selectedBrithPlaceOptions: [],
+                selectedGrandPlaceOptions: [], 
+                selectedHouseholdPlaceOptions: [],
                 birthPlaceOptions: regionData,
                 householdPlaceOptions: regionData,
                 grandPlaceOptions: provinceAndCityData,
@@ -383,10 +404,10 @@
                         { required: true, message: '请选择性别', trigger: 'change', type: 'string' }
                     ],
                     brithPlaceCode: [
-                        { required: true, message: '请选择出生地', trigger: 'change', type: 'string' }
+                        { required: true, message: '请选择出生地', trigger: 'change', type: 'array' }
                     ],
                     grandPlaceCode: [
-                        { required: true, message: '请选择籍贯', trigger: 'change', type: 'string' }
+                        { required: true, message: '请选择籍贯', trigger: 'change', type: 'array' }
                     ],
                     ethnic: [
                         { required: true, message: '请选择民族', trigger: 'change', type: 'string' }
@@ -409,7 +430,7 @@
                     ],
                     //------学生个人辅助信息
                     householdPlaceCode: [
-                        { required: true, message: '请选择户口所在地', trigger: 'change', type: 'string' }
+                        { required: true, message: '请选择户口所在地', trigger: 'change', type: 'array' }
                     ],
                     householdType: [
                         { required: true, message: '请选择户口性质', trigger: 'blur' }
@@ -445,7 +466,7 @@
                         { required: true, message: '请选择', trigger: 'blur' }
                     ],
                     householdPlaceCode1: [
-                        { required: true, message: '请选择户口所在地', trigger: 'blur' }
+                        { required: true, message: '请选择户口所在地', trigger: 'blur', type: 'array' }
                     ],
                     contact1PhoneNumber: [
                         { required: true, message: '请填联系电话', trigger: 'blur' }
@@ -464,7 +485,7 @@
                         { required: true, message: '请选择', trigger: 'blur' }
                     ],
                     householdPlaceCode2: [
-                        { required: true, message: '请选择户口所在地', trigger: 'blur' }
+                        { required: true, message: '请选择户口所在地', trigger: 'blur', type: 'array'  }
                     ],
                     contact2PhoneNumber: [
                         { required: true, message: '请填联系电话', trigger: 'blur' }
