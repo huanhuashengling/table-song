@@ -1,19 +1,17 @@
 <template>
 <article>
     <div class="search">
-        <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="keyword" @keydown.enter.native="getBlogList"></el-input>
-        <el-button type="primary" icon="el-icon-search" :loading="loading" @click="getBlogList">搜索</el-button>
+        <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="keyword" @keydown.enter.native="getStudentList"></el-input>
+        <el-button type="primary" icon="el-icon-search" :loading="loading" @click="getStudentList">搜索</el-button>
     </div>
-    <el-table ref="multipleTable" :data="blogList" tooltip-effect="dark" stripe border>
-        <el-table-column type="index" width="55" align="center" header-align="center" :index="increment"></el-table-column>
-
-        <el-table-column show-overflow-tooltip v-if="!item.hidden && !item.filters" v-for="(item, index) in headerOptions" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign" :align="item.align" :sortable="item.sort"  :min-width="item.minWidth || 150">
+    <el-table ref="multipleTable" :data="studentList" tooltip-effect="dark" stripe border>
+        <el-table-column show-overflow-tooltip type="index" width="55" align="center" header-align="center" :index="increment"></el-table-column>
+        <el-table-column show-overflow-tooltip v-if="!item.hidden && !item.filters && !item.format" v-for="(item, index) in headerOptions" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign" :align="item.align" :sortable="item.sort"  :min-width="item.minWidth || 150">
             <template slot-scope="scope">
-                <div v-if="scope.column.property == 'isVisible'">{{scope.row[scope.column.property]?'是':'否'}}</div>
-                <div v-else-if="scope.column.property == 'source'">{{scope.row[scope.column.property] === 1?'原创':scope.row[scope.column.property] === 2?'转载':'翻译'}}</div>
-                <div v-else-if="scope.column.property == 'releaseTime'">{{scope.row[scope.column.property] | parseTime('{y}-{m}-{d}')}}</div>
-                <div v-else>{{scope.row[scope.column.property] || '无'}}</div>
+                <div>{{scope.row[scope.column.property] || '无'}}</div>
             </template>
+        </el-table-column>
+        <el-table-column show-overflow-tooltip v-else-if="!item.hidden && !item.filters && item.format" :key="index" :label="item.label" :formatter="testFmt" :prop="item.prop" :header-align="item.headerAlign" :align="item.align" :sortable="item.sort"  :min-width="item.minWidth || 150">
         </el-table-column>
         <el-table-column show-overflow-tooltip v-else-if="!item.hidden && item.filters" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign" :align="item.align" :sortable="item.sort" :filters="item.filters" :filter-method="filterTag"  :min-width="item.minWidth || 200">
             <template slot-scope="scope">
@@ -39,16 +37,17 @@
       :page-sizes="size_scoped"
       :page-size="pagesize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="blogTotal">
+      :total="studentTotal">
     </el-pagination>
-    <EditComponent v-if="editShow" :info="blogInfo" @close="close"></EditComponent>
+    <EditComponent v-if="editShow" :info="studentInfo" @close="close"></EditComponent>
 
 </article>
 </template>
 <script>
     import { mapGetters } from 'vuex'
     import EditComponent from '../edit/index'
-    import { blogFilters } from 'store/modules/classify'
+    import { sexTypes, ethnics, nations } from 'store/modules/classify'
+    import { CodeToText, TextToCode } from 'element-china-area-data'
     export default {
         components: {
             EditComponent
@@ -57,7 +56,7 @@
             return {
                 keyword: '',
                 editShow: false,
-                blogInfo: {},
+                studentInfo: {},
                 loading: false,
                 pageindex: 1,
                 pagesize: 10,
@@ -72,13 +71,13 @@
                         width: ''
                     },
                     {
-                        label: '身份证件类型',
-                        prop: 'type',
+                        label: '身份证件号',
+                        prop: 'studentID',
                         hidden: false,
                         headerAlign: 'center',
                         align: 'center',
                         width: '',
-                        // filters: blogFilters                   
+                        // filters: studentFilters                   
                     },
                     {
                         label: '姓名',
@@ -95,45 +94,39 @@
                         hidden: false,
                         headerAlign: 'center',
                         align: 'center',
+                        format: true,
+                        width: '',
+                        sort: true,
+                    },
+                    {
+                        label: '出生日期',
+                        prop: 'birthDate',
+                        hidden: false,
+                        headerAlign: 'center',
+                        format: true,
+                        align: 'center',
                         width: '',
                         sort: true
                     },
                     {
-                        label: '标题',
-                        prop: 'title',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: '',
-                        sort: true
-                    },
-                    {
-                        label: '描述',
-                        prop: 'desc',
+                        label: '全国学籍号',
+                        prop: 'nationalStudentNumber',
                         hidden: false,
                         headerAlign: 'center',
                         align: 'center',
                         width: ''
                     },
                     {
-                        label: '来源',
-                        prop: 'source',
+                        label: '年级',
+                        prop: 'grade',
                         hidden: false,
                         headerAlign: 'center',
                         align: 'center',
                         width: ''
                     },
                     {
-                        label: '级别',
-                        prop: 'level',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: ''
-                    },
-                    {
-                        label: '发布时间',
-                        prop: 'releaseTime',
+                        label: '班级',
+                        prop: 'classNum',
                         hidden: false,
                         headerAlign: 'center',
                         align: 'center',
@@ -141,19 +134,64 @@
                         sort: true
                     },
                     {
-                        label: '是否可见',
-                        prop: 'isVisible',
+                        label: '现住址',
+                        prop: 'address',
                         hidden: false,
                         headerAlign: 'center',
                         align: 'center',
-                        minWidth: 120
+                        width: ''
+                    },
+                    {
+                        label: '出生地',
+                        prop: 'brithPlaceCode',
+                        hidden: false,
+                        headerAlign: 'center',
+                        align: 'center',
+                        format: true,
+                        minWidth: '220'
+                    },
+                    {
+                        label: '籍贯',
+                        prop: 'grandPlaceCode',
+                        hidden: false,
+                        headerAlign: 'center',
+                        align: 'center',
+                        format: true,
+                        minWidth: '150'
+                    },
+                    {
+                        label: '国家地区',
+                        prop: 'nation',
+                        hidden: false,
+                        headerAlign: 'center',
+                        align: 'center',
+                        format: true,
+                        minWidth: '150'
+                    },
+                    {
+                        label: '民族',
+                        prop: 'ethnic',
+                        hidden: false,
+                        headerAlign: 'center',
+                        align: 'center',
+                        format: true,
+                        minWidth: '150'
+                    },
+                    {
+                        label: '联系电话',
+                        prop: 'contactPhoneNumber',
+                        hidden: false,
+                        headerAlign: 'center',
+                        align: 'center',
+                        width: '',
+                        sort: true
                     }
                 ],
                 multipleSelection: []
             }
         },
         mounted () {
-            this.getBlogList()
+            this.getStudentList()
         },
 
         methods: {
@@ -162,22 +200,72 @@
             },
             close () {
                 this.editShow = false;
-                this.getBlogList()
+                this.getStudentList()
             },
             handleSizeChange(val) {
                 // console.log(`每页 ${val} 条`);
                 this.pagesize = val;
-                this.getBlogList()
+                this.getStudentList()
             },
             handleCurrentChange(val) {
                 // console.log(`当前页: ${val}`);
                 this.pageindex = val;
-                this.getBlogList()
+                this.getStudentList()
             },
-            async getBlogList () {
+            codeFmt(codeArr) {
+                var returnStr = "";
+                for (let index = 0; index < codeArr.length; index++) {
+                    returnStr += CodeToText[codeArr[index]];
+                }
+                return returnStr;
+            },
+            testFmt(row, column) {
+                console.log(row);
+                console.log(column.label);
+                switch (column.label) {
+                    case "性别":
+                        return this.anyFmt(sexTypes, row.sexType);
+                    break;
+                    case "出生日期"://430181198410263456
+                        var idStr = row.studentID;
+                        return idStr.substring(6, 10)+"-"+idStr.substring(10, 12)+"-"+idStr.substring(12, 14);
+                    break;
+                    case "出生地":
+                        var codeArr = row.brithPlaceCode.split(",");
+                        return this.codeFmt(codeArr);
+                    break;
+                    case "籍贯":
+                        var codeArr = row.grandPlaceCode.split(",");
+                        return this.codeFmt(codeArr);
+                    break;
+                    case "民族":
+                        return this.anyFmt(ethnics, row.ethnic);
+                    break;
+                    case "国家地区":
+                        return this.nationFmt(nations, row.nation);
+                    break;
+                }
+            },
+            anyFmt(classDatas, key) {
+                for (let index = 0; index < classDatas.length; index++) {
+                    const element = classDatas[index];
+                    if (element.id == key) {
+                        return element.name;
+                    }
+                }
+            },
+            nationFmt(classDatas, key) {
+                for (let index = 0; index < classDatas.length; index++) {
+                    const element = classDatas[index];
+                    if (element.code == key) {
+                        return element.cn;
+                    }
+                }
+            },
+            async getStudentList () {
                 this.loading = true;
                 try {
-                    await this.$store.dispatch('getBlogList', {
+                    await this.$store.dispatch('getStudentList', {
                         keyword: this.keyword,
                         pageindex: this.pageindex,
                         pagesize: this.pagesize
@@ -195,8 +283,8 @@
                       center: true
                     }).then(async () => {
                         try {
-                    await this.$store.dispatch('delBlog', scope.row._id)
-                    this.blogList.splice(scope.$index, 1)
+                    await this.$store.dispatch('delStudent', scope.row._id)
+                    this.studentList.splice(scope.$index, 1)
                 }catch(e) {
 
                 }
@@ -224,8 +312,11 @@
         },
         computed: {
             ...mapGetters([
-                'blogList',
-                'blogTotal'
+                'studentList',
+                'studentTotal',
+                'sexTypes',
+                'ethnics',
+                'nations'
             ])
         }
     }

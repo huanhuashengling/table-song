@@ -16,10 +16,10 @@ export default app => {
 
 
     // 文章请求
-    router.get('/admin_demo_api/blog/list', app.admin.blog.list)
-    router.post('/admin_demo_api/blog/add', app.admin.blog.add)
-    router.post('/admin_demo_api/blog/update', app.admin.blog.update)
-    router.get('/admin_demo_api/blog/del', app.admin.blog.del)
+    router.get('/admin_demo_api/student/list', app.admin.student.list)
+    router.post('/admin_demo_api/student/add', app.admin.student.add)
+    router.post('/admin_demo_api/student/update', app.admin.student.update)
+    router.get('/admin_demo_api/student/del', app.admin.student.del)
 
     // 其他请求
     router.post('/admin_demo_api/markdown_upload_img', app.admin.other.markdown_upload_img)

@@ -56,6 +56,26 @@ export const leftChildrenTypes = [
     { id: "02", name: '单亲留守儿童' },
     { id: "03", name: '双亲留守儿童' },
 ]
+//非随班就读
+export const mainstreams = [
+    { id: "01", name: '非随班就读' },
+    { id: "02", name: '视力残疾随班就读' },
+    { id: "03", name: '听力残疾随班就读' },
+    { id: "04", name: '智力残疾随班就读' },
+    { id: "05", name: '其他残疾随班就读' },
+]
+//残疾
+export const disabilities = [
+    { id: "01", name: '无残疾' },
+    { id: "02", name: '视力残疾' },
+    { id: "03", name: '听力残疾' },
+    { id: "04", name: '言语残疾' },
+    { id: "05", name: '肢体残疾' },
+    { id: "06", name: '智力残疾' },
+    { id: "07", name: '精神残疾' },
+    { id: "08", name: '多重残疾' },
+    { id: "09", name: '其他残疾' },
+]
 //学生来源
 export const studentSources = [ 
     { id: "01", name: '正常入学' },

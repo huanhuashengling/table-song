@@ -1,7 +1,7 @@
 import axios from 'src/utils/fetch'
 import { IDTypes, sexTypes, ethnics, nations, healthStatuses, householdTypes, politicalStatuses, switchStates} from './classify'
 import { studentSources, notMainlands, admissionModes, bloodTypes, residentTypes, leftChildrenTypes, vehicles} from './classify'
-import { relations } from './classify'
+import { relations, disabilities, mainstreams } from './classify'
 
 const music = {
 	state: {
@@ -20,6 +20,8 @@ const music = {
 		switchStates,
 		residentTypes,
 		relations,
+		disabilities, 
+		mainstreams,
 		bloodTypes,
 		list: [],
 		total: 0

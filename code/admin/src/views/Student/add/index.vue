@@ -336,21 +336,23 @@
                     notMainland: '01',              //10 港澳台侨外       默认否
                     type: '01',                     //8  身份证件类型     默认居民身份证
                     studentID: '',                  //9  身份证号
-                    politicalStatus: '',            //11  政治面貌    不显示  默认少先队员
-                    healthStatus: '健康或良好',       //12  健康状况    不显示  默认健康或良好
+                    politicalStatus: '01',          //11  政治面貌    不显示  默认少先队员
+                    healthStatus: '01',             //12  健康状况    不显示  默认健康或良好
                     //------学生个人辅助信息
-                    
                     householdPlaceCode: [],         //17  户口所在地
                     householdType: '',              //18  户口性质
                     strongPoint: '',                //19  特长
+                    IDValidityPeriod: '',           //16  身份证有效期
+                    usedName: '',                   //15  曾用名
                     //------学生学籍辅助信息
+                    nationalStudentNumber: '',      //20  全国学籍号
                     inClassNum: '',                 //21  班内学号     默认空
                     grade: '小学2019级',             //22  年级        默认
                     classNum: '',                   //23  班级        默认空
                     enterSchoolYearMonth: '201909', //24  入学年月     默认
-                    admissionMode: '就近入学',        //25  入学方式    默认
-                    residentType: '走读',            //26  就读方式    默认
-                    studentSource: '正常入学',        //27  学生来源    默认
+                    admissionMode: '01',            //25  入学方式    默认
+                    residentType: '01',             //26  就读方式    默认
+                    studentSource: '01',            //27  学生来源    默认
                     //------学生个人联系方式
                     address: '',                    //28  现住址
                     contactAddress: '',             //29  现住址
@@ -359,38 +361,47 @@
                     //------学生个人扩展信息
                     isOneChild: '',                 //35  是否独生子女
                     hasPreschoolEducation: '',      //36  是否受过学前教育
-                    leftChildrenType: '01',           //37  是否留守儿童
+                    leftChildrenType: '01',         //37  是否留守儿童
                     withEnterCities: '',            //38  是否进城务工随迁子女
                     orphan: '02',                   //39  是否孤儿
                     martyr: '02',                   //40  是否烈士或优抚子女
-                    mainstream: '非随班就读',         //41  随班就读
-                    disability: '无残疾',            //42  残疾类型
+                    mainstream: '01',               //41  随班就读
+                    disability: '01',               //42  残疾类型
                     govBuySeat: '02',               //43  是否政府购买学位
                     needHelp: '02',                 //44  是否需要申请资助
                     enjoyHelp: '02',                //45  是否享受一补
-                    hasDoubleGirls: '',
+                    hasDoubleGirls: '',             //    是否双女户
                     //------学生上下学交通方式
                     distance: '',                   //46  上下学距离
-                    vehicle: '',                  //47  交通方式
-                    schoolbus: '02',                  //48  是否需要校车
+                    vehicle: '',                    //47  交通方式
+                    schoolbus: '02',                //48  是否需要校车
                     //-------学生家庭成员或监护人信息一
-                    keeper1Name: '',
-                    relation1: '01',
-                    keeper1: '02',
-                    householdPlaceCode1: [],
-                    contact1PhoneNumber: '',
-                    address1: '',
+                    keeper1Name: '',                //49  监护人1姓名
+                    relation1: '01',                //50  监护人1关系
+                    relation1desc: '',              //51  监护人1关系说明
+                    keeper1ethnic: '',              //52  监护人1民族
+                    keeper1workplace: '',           //53  监护人1工作单位
+                    address1: '',                   //54  监护人1现住址
+                    householdPlaceCode1: [],        //55  监护人1户口所在地
+                    contact1PhoneNumber: '',        //56  监护人1联系电话
+                    keeper1: '02',                  //57  是否是监护人
+                    keeper1IDtype: '',              //58  监护人1身份证类型
+                    keeper1ID: '',                  //59  监护人1身份证号码
+                    keeper1position: '',            //60  监护人1职务
                     //-------学生家庭成员或监护人信息二
-                    keeper2Name: '',
-                    relation2: '02',
-                    keeper2: '02',
-                    householdPlaceCode2: [],
-                    contact2PhoneNumber: '',
-                    address2: '',
+                    keeper2Name: '',                //61  监护人2姓名
+                    relation2: '01',                //62  监护人2关系
+                    relation2desc: '',              //63  监护人2关系说明
+                    keeper2ethnic: '',              //64  监护人2民族
+                    keeper2workplace: '',           //65  监护人2工作单位
+                    address2: '',                   //66  监护人2现住址
+                    householdPlaceCode2: [],        //67  监护人2户口所在地
+                    contact2PhoneNumber: '',        //68  监护人2联系电话
+                    keeper2: '02',                  //69  是否是监护人
+                    keeper2IDtype: '',              //70  监护人2身份证类型
+                    keeper2ID: '',                  //71  监护人2身份证号码
+                    keeper2position: '',            //72  监护人2职务
                 },
-                selectedBrithPlaceOptions: [],
-                selectedGrandPlaceOptions: [], 
-                selectedHouseholdPlaceOptions: [],
                 birthPlaceOptions: regionData,
                 householdPlaceOptions: regionData,
                 grandPlaceOptions: provinceAndCityData,
@@ -546,6 +557,8 @@
                 'residentTypes',
                 'vehicles',
                 'relations',
+                'disabilities', 
+		        'mainstreams',
             ])
         }
     }

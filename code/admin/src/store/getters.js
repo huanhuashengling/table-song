@@ -18,10 +18,12 @@ const getters = {
     switchStates: state => state.student.switchStates,
     vehicles: state => state.student.vehicles,
     relations: state => state.student.relations,
+    mainstreams: state => state.student.mainstreams,
+    disabilities: state => state.student.disabilities,
     residentTypes: state => state.student.residentTypes,
     admissionModes: state => state.student.admissionModes,
     bloodTypes: state => state.student.bloodTypes,
     studentList: state => state.student.list,
-    // blogTotal: state => state.blog.total
+    studentTotal: state => state.student.total
 }
 export default getters
