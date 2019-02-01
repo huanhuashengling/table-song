@@ -30,7 +30,7 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="民族" prop="ethnic">
-                        <el-select v-model="info.ethnic" clearable placeholder="请选择性别" class="block">
+                        <el-select v-model="info.ethnic" clearable placeholder="请选择民族" class="block">
                             <el-option v-for="item in ethnics" :key="item.id" :label="item.name" :value="item.id">
                             </el-option>
                         </el-select>
@@ -84,7 +84,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="身份证件类型" prop="type">
+                    <el-form-item label="身份证件类型" prop="IDType">
                         <el-select v-model="info.IDType" clearable placeholder="请选择身份证件类型" class="block">
                             <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
                             </el-option>
@@ -183,7 +183,7 @@
             学生上下学交通方式<hr><br />
             <el-row>
                 <el-col :span="4">
-                    <el-form-item label="上下学距离" prop="distance">
+                    <el-form-item label="上下学距离(公里)" prop="distance">
                         <el-input type="text" v-model="info.distance" placeholder="公里"></el-input>
                     </el-form-item>
                 </el-col>
@@ -334,7 +334,7 @@
                     nation: 'CN',                   //7  国家地区        默认中国
                     contactPhoneNumber: '',         //31 联系电话
                     notMainland: '01',              //10 港澳台侨外       默认否
-                    type: '01',                     //8  身份证件类型     默认居民身份证
+                    IDType: '01',                     //8  身份证件类型     默认居民身份证
                     studentID: '',                  //9  身份证号
                     politicalStatus: '01',          //11  政治面貌    不显示  默认少先队员
                     healthStatus: '01',             //12  健康状况    不显示  默认健康或良好
@@ -384,20 +384,20 @@
                     address1: '',                   //54  监护人1现住址
                     householdPlaceCode1: [],        //55  监护人1户口所在地
                     contact1PhoneNumber: '',        //56  监护人1联系电话
-                    keeper1: '02',                  //57  是否是监护人
+                    keeper1: '01',                  //57  是否是监护人
                     keeper1IDtype: '',              //58  监护人1身份证类型
                     keeper1ID: '',                  //59  监护人1身份证号码
                     keeper1position: '',            //60  监护人1职务
                     //-------学生家庭成员或监护人信息二
                     keeper2Name: '',                //61  监护人2姓名
-                    relation2: '01',                //62  监护人2关系
+                    relation2: '02',                //62  监护人2关系
                     relation2desc: '',              //63  监护人2关系说明
                     keeper2ethnic: '',              //64  监护人2民族
                     keeper2workplace: '',           //65  监护人2工作单位
                     address2: '',                   //66  监护人2现住址
                     householdPlaceCode2: [],        //67  监护人2户口所在地
                     contact2PhoneNumber: '',        //68  监护人2联系电话
-                    keeper2: '02',                  //69  是否是监护人
+                    keeper2: '01',                  //69  是否是监护人
                     keeper2IDtype: '',              //70  监护人2身份证类型
                     keeper2ID: '',                  //71  监护人2身份证号码
                     keeper2position: '',            //72  监护人2职务

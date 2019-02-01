@@ -6,14 +6,14 @@
     </div>
     <el-table ref="multipleTable" :data="studentList" tooltip-effect="dark" stripe border>
         <el-table-column show-overflow-tooltip type="index" width="55" align="center" header-align="center" :index="increment"></el-table-column>
-        <el-table-column show-overflow-tooltip v-if="!item.hidden && !item.filters && !item.format" v-for="(item, index) in headerOptions" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign" :align="item.align" :sortable="item.sort"  :min-width="item.minWidth || 150">
+        <el-table-column show-overflow-tooltip v-if="!item.hidden && !item.filters && !item.format" v-for="(item, index) in headerOptions" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign || 'center'" :align="item.align || 'center'" :sortable="item.sort || false"  :min-width="item.minWidth || 150">
             <template slot-scope="scope">
                 <div>{{scope.row[scope.column.property] || '无'}}</div>
             </template>
         </el-table-column>
-        <el-table-column show-overflow-tooltip v-else-if="!item.hidden && !item.filters && item.format" :key="index" :label="item.label" :formatter="testFmt" :prop="item.prop" :header-align="item.headerAlign" :align="item.align" :sortable="item.sort"  :min-width="item.minWidth || 150">
+        <el-table-column show-overflow-tooltip v-else-if="!item.hidden && !item.filters && item.format" :key="index" :label="item.label" :formatter="anyFmt" :prop="item.prop" :header-align="item.headerAlign || 'center'" :align="item.align || 'center'" :sortable="item.sort || false"  :min-width="item.minWidth || 150">
         </el-table-column>
-        <el-table-column show-overflow-tooltip v-else-if="!item.hidden && item.filters" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign" :align="item.align" :sortable="item.sort" :filters="item.filters" :filter-method="filterTag"  :min-width="item.minWidth || 200">
+        <el-table-column show-overflow-tooltip v-else-if="!item.hidden && item.filters" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign || 'center'" :align="item.align || 'center'" :sortable="item.sort" :filters="item.filters" :filter-method="filterTag"  :min-width="item.minWidth || 200">
             <template slot-scope="scope">
                 <el-tag
                     class="tag"
@@ -39,14 +39,14 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="studentTotal">
     </el-pagination>
-    <EditComponent v-if="editShow" :info="studentInfo" @close="close"></EditComponent>
+    <EditComponent v-if="editShow" :info="studentInfo" :data=12 @close="close"></EditComponent>
 
 </article>
 </template>
 <script>
     import { mapGetters } from 'vuex'
     import EditComponent from '../edit/index'
-    import { sexTypes, ethnics, nations } from 'store/modules/classify'
+    import { sexTypes, ethnics, nations, relations } from 'store/modules/classify'
     import { CodeToText, TextToCode } from 'element-china-area-data'
     export default {
         components: {
@@ -62,130 +62,45 @@
                 pagesize: 10,
                 size_scoped: [10, 20, 30, 40],
                 headerOptions: [
-                    {
-                        label: '_id',
-                        prop: '_id',
-                        hidden: true,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: ''
-                    },
-                    {
-                        label: '身份证件号',
-                        prop: 'studentID',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: '',
-                        // filters: studentFilters                   
-                    },
-                    {
-                        label: '姓名',
-                        prop: 'studentName',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: '',
-                        sort: true
-                    },
-                    {
-                        label: '性别',
-                        prop: 'sexType',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        format: true,
-                        width: '',
-                        sort: true,
-                    },
-                    {
-                        label: '出生日期',
-                        prop: 'birthDate',
-                        hidden: false,
-                        headerAlign: 'center',
-                        format: true,
-                        align: 'center',
-                        width: '',
-                        sort: true
-                    },
-                    {
-                        label: '全国学籍号',
-                        prop: 'nationalStudentNumber',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: ''
-                    },
-                    {
-                        label: '年级',
-                        prop: 'grade',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: ''
-                    },
-                    {
-                        label: '班级',
-                        prop: 'classNum',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: '',
-                        sort: true
-                    },
-                    {
-                        label: '现住址',
-                        prop: 'address',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: ''
-                    },
-                    {
-                        label: '出生地',
-                        prop: 'brithPlaceCode',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        format: true,
-                        minWidth: '220'
-                    },
-                    {
-                        label: '籍贯',
-                        prop: 'grandPlaceCode',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        format: true,
-                        minWidth: '150'
-                    },
-                    {
-                        label: '国家地区',
-                        prop: 'nation',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        format: true,
-                        minWidth: '150'
-                    },
-                    {
-                        label: '民族',
-                        prop: 'ethnic',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        format: true,
-                        minWidth: '150'
-                    },
-                    {
-                        label: '联系电话',
-                        prop: 'contactPhoneNumber',
-                        hidden: false,
-                        headerAlign: 'center',
-                        align: 'center',
-                        width: '',
-                        sort: true
-                    }
+                //------学生个人基本信息
+                { label: '_id',      prop: '_id',       hidden: true, },
+                
+                { label: '姓名',      prop: 'studentName', minWidth: '100' },
+                { label: '性别',      prop: 'sexType', format: true, minWidth: '80' },
+                { label: '出生日期',   prop: 'birthDate', format: true, minWidth: '110' },
+                { label: '出生地',     prop: 'brithPlaceCode', format: true, minWidth: '200' },
+                { label: '籍贯',      prop: 'grandPlaceCode', format: true, minWidth: '150' },
+                { label: '民族',       prop: 'ethnic', format: true, minWidth: '80' },
+                { label: '国家地区',   prop: 'nation', format: true, minWidth: '110' },
+                { label: '联系电话',    prop: 'contactPhoneNumber',},
+                { label: '身份证件号', prop: 'studentID', },
+                //------学生个人辅助信息
+                //------学生学籍辅助信息
+                { label: '全国学籍号', prop: 'nationalStudentNumber', width: '' },
+                { label: '年级',      prop: 'grade', minWidth: '120' },
+                { label: '班级',      prop: 'classNum', },
+                { label: '入学年月',      prop: 'enterSchoolYearMonth', },
+                
+                //------学生个人联系方式
+                { label: '现住址',     prop: 'address', minWidth: '220' },
+                
+                //------学生个人扩展信息
+
+                //------学生上下学交通方式
+
+                //-------学生家庭成员或监护人信息一
+                { label: '成员1姓名',     prop: 'keeper1Name', },
+                { label: '成员1关系',     prop: 'relation1', format: true,},
+                { label: '成员1户口所在地',     prop: 'brithPlaceCode1', format: true, minWidth: '220' },
+                { label: '成员1联系电话',     prop: 'contact1PhoneNumber', },
+                { label: '是否监护人',     prop: 'keeper1', format: true, },
+
+                //-------学生家庭成员或监护人信息二
+                { label: '成员2姓名',     prop: 'keeper2Name', },
+                { label: '成员2关系',     prop: 'relation2', format: true,},
+                { label: '成员2户口所在地',     prop: 'brithPlaceCode2', format: true, minWidth: '220' },
+                { label: '成员2联系电话',     prop: 'contact2PhoneNumber', },
+                { label: '是否监护人',     prop: 'keeper2', format: true, },
                 ],
                 multipleSelection: []
             }
@@ -212,41 +127,53 @@
                 this.pageindex = val;
                 this.getStudentList()
             },
-            codeFmt(codeArr) {
+            codeFmt(codeStr) {
                 var returnStr = "";
+                var codeArr = codeStr.split(",");
                 for (let index = 0; index < codeArr.length; index++) {
                     returnStr += CodeToText[codeArr[index]];
                 }
                 return returnStr;
             },
-            testFmt(row, column) {
-                console.log(row);
-                console.log(column.label);
+            anyFmt(row, column) {
                 switch (column.label) {
                     case "性别":
-                        return this.anyFmt(sexTypes, row.sexType);
+                        return ("01" == row.sexType)?'男':'女';
                     break;
                     case "出生日期"://430181198410263456
                         var idStr = row.studentID;
                         return idStr.substring(6, 10)+"-"+idStr.substring(10, 12)+"-"+idStr.substring(12, 14);
                     break;
                     case "出生地":
-                        var codeArr = row.brithPlaceCode.split(",");
-                        return this.codeFmt(codeArr);
+                        return this.codeFmt(row.brithPlaceCode);
                     break;
                     case "籍贯":
-                        var codeArr = row.grandPlaceCode.split(",");
-                        return this.codeFmt(codeArr);
+                        return this.codeFmt(row.grandPlaceCode);
                     break;
                     case "民族":
-                        return this.anyFmt(ethnics, row.ethnic);
+                        return ("01" == row.ethnic)?'汉族':this.basicFmt(ethnics, row.ethnic);
                     break;
                     case "国家地区":
-                        return this.nationFmt(nations, row.nation);
+                        return ("CN" == row.nation)?'中国':this.basicFmt(nations, row.nation);
+                    break;
+                    case "成员1关系":
+                        return this.basicFmt(relations, row.relation1);
+                    break;
+                    case "成员1户口所在地":
+                        return this.codeFmt(row.householdPlaceCode1);
+                    break;
+                    case "成员2关系":
+                        return this.basicFmt(relations, row.relation2);
+                    break;
+                    case "成员2户口所在地":
+                        return this.codeFmt(row.householdPlaceCode2);
+                    break;
+                    case "是否监护人":
+                        return ("02" == row.sexType)?'是':'否';
                     break;
                 }
             },
-            anyFmt(classDatas, key) {
+            basicFmt(classDatas, key) {
                 for (let index = 0; index < classDatas.length; index++) {
                     const element = classDatas[index];
                     if (element.id == key) {
@@ -301,10 +228,10 @@
                 
             },
             edit (scope) {
-                console.log(scope)
+                console.log(scope.row)
                 this.editShow = true;
-                scope.row.releaseTime = new Date(scope.row.releaseTime)
-                this.blogInfo = scope.row
+                this.studentInfo = scope.row;
+                // scope.row.releaseTime = new Date(scope.row.releaseTime)
             },
             filterTag(value, row) {
                 return row.type.some( v => v === value)
@@ -316,7 +243,8 @@
                 'studentTotal',
                 'sexTypes',
                 'ethnics',
-                'nations'
+                'nations',
+                'relations',
             ])
         }
     }

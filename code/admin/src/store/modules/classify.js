@@ -1,8 +1,3 @@
-// 来源
-export const sources = [
-    { name: '原创', id: 1 },
-    { name: '转载', id: 2 },
-    { name: '翻译', id: 3 }]
 //健康状况
 export const healthStatuses = [
     { id: "01",  name: '健康或良好' },

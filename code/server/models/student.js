@@ -10,7 +10,7 @@ let studentSchema = db.Schema({
     nation: String,                     //7  国家地区        默认中国
     contactPhoneNumber: String,         //31 联系电话
     notMainland: String,                //10 港澳台侨外       默认否
-    type: String,                       //8  身份证件类型     默认居民身份证
+    IDType: String,                     //8  身份证件类型     默认居民身份证
     studentID: String,                  //9  身份证号
     politicalStatus: String,            //11  政治面貌    不显示  默认少先队员
     healthStatus: String,               //12  健康状况    不显示  默认健康或良好
@@ -50,7 +50,7 @@ let studentSchema = db.Schema({
     //------学生上下学交通方式
     distance: String,                   //46  上下学距离
     vehicle: String,                    //47  交通方式
-    schoolbus: Boolean,                 //48  是否需要校车
+    schoolbus: String,                 //48  是否需要校车
     //-------学生家庭成员或监护人信息一
     keeper1Name: String,                //49  监护人1姓名
     relation1: String,                  //50  监护人1关系

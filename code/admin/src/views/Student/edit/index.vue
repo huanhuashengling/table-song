@@ -1,54 +1,291 @@
 <template>
     <el-dialog title="学籍信息更新" :visible.sync="dialogTableVisible" class="edit-wrapper" @close="close" width="80%">
         <el-form :model="info" :rules="rules" ref="form" label-width="100px" class="form">
-            <el-form-item label="身份证件类型" prop="type">
-                <el-select v-model="info.type" clearable placeholder="请选择身份证件类型" class="block">
-                    <el-option v-for="item in blogTypes" :key="item.name" :label="item.name" :value="item.name">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="学生姓名" prop="studentName">
-                <el-input type="text" v-model="info.studentName"></el-input>
-            </el-form-item>
-            <el-form-item label="性别" prop="sexType">
-                <el-select v-model="info.sexType" clearable placeholder="请选择性别" class="block">
-                    <el-option v-for="item in sexTypes" :key="item.name" :label="item.name" :value="item.name">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="文章标题" prop="title">
-                <el-input type="text" v-model="info.title"></el-input>
-            </el-form-item>
-            <el-form-item label="文章描述" prop="desc">
-                <el-input type="textarea" v-model="info.desc"></el-input>
-            </el-form-item>
-            <el-form-item label="文章内容" prop="markdown">
-                <Markdown v-model="info.markdown"></Markdown>
-            </el-form-item>
-            <el-form-item label="级别" prop="album">
-                <el-select v-model="info.level" placeholder="请选择级别" class="block">
-                    <el-option v-for="item in [1,2,3,4,5,6]" :key="item" :label="item" :value="item">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="来源" prop="source">
-                <el-select v-model="info.source" placeholder="请选择来源" class="block">
-                    <el-option v-for="item in sources" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="Github" prop="github">
-                <el-input type="text" v-model="info.github"></el-input>
-            </el-form-item>
-            <el-form-item label="发布时间" prop="releaseTime">
-                <el-date-picker class="block" v-model="info.releaseTime" type="date" placeholder="选择发布日期"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="是否可见" prop="isVisible" class="left-item">
-                <el-switch v-model="info.isVisible"></el-switch>
-            </el-form-item>
+            <el-row>
+                <el-col :span="6">
+                    <el-form-item label="学生姓名" prop="studentName">
+                        <el-input type="text" v-model="info.studentName"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                    <el-form-item label="性别" prop="sexType">
+                        <el-select v-model="info.sexType" clearable placeholder="请选择性别" class="block">
+                            <el-option v-for="item in sexTypes" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="民族" prop="ethnic">
+                        <el-select v-model="info.ethnic" clearable placeholder="请选择民族" class="block">
+                            <el-option v-for="item in ethnics" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="联系电话" prop="contactPhoneNumber">
+                        <el-input type="text" v-model="info.contactPhoneNumber"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="出生地" prop="brithPlaceCode">
+                        <el-cascader
+                        size="medium"
+                        :options="birthPlaceOptions"
+                        v-model="birthPlaceCodeToArray"
+                        @change="handleBirthPlaceChange">
+                        </el-cascader>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="籍贯" prop="grandPlaceCode">
+                        <el-cascader
+                        size="large"
+                        :options="grandPlaceOptions"
+                        v-model="grandPlaceCodeToArray"
+                        @change="handleGrandPlaceChange">
+                        </el-cascader>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="国籍/地区" prop="nation">
+                        <el-select v-model="info.nation" clearable placeholder="请选择国籍/地区" class="block">
+                            <el-option v-for="item in nations" :key="item.code" :label="item.en + ' ' + item.cn" :value="item.code">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            
+
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="港澳台侨外" prop="notMainland">
+                        <el-select v-model="info.notMainland" clearable placeholder="港澳台侨外" class="block">
+                            <el-option v-for="item in notMainlands" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="身份证件类型" prop="IDType">
+                        <el-select v-model="info.IDType" clearable placeholder="请选择身份证件类型" class="block">
+                            <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="证件号码" prop="studentID">
+                        <el-input type="text" v-model="info.studentID"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            学生个人辅助信息<hr><br />
+            <el-row>
+                <el-col :span="8">
+                    <el-form-item label="户口所在地" prop="householdPlaceCode">
+                        <el-cascader
+                        size="large"
+                        :options="householdPlaceOptions"
+                        v-model="householdPlaceCodeToArray"
+                        @change="handleHouseholdPlaceChange">
+                        </el-cascader>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="街道/社区/乡镇" prop="usedStudentName">
+                        <el-input type="text" v-model="info.usedStudentName"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="户口性质" prop="householdType">
+                        <el-select v-model="info.householdType" clearable placeholder="请选择户口性质" class="block">
+                            <el-option v-for="item in householdTypes" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+            <el-col :span="12">
+                    <el-form-item label="特长" prop="strongPoint">
+                        <el-input type="text" v-model="info.strongPoint"></el-input>
+                    </el-form-item>
+                </el-col>
+                </el-row>
+            学生学籍基本信息<hr><br />
+            学生个人联系信息<hr><br />
+            <el-row>
+                <el-col :span="19">
+                    <el-form-item label="现住址" prop="address">
+                        <el-input type="text" v-model="info.address" placeholder="省市(区/县)(街道社区镇村)到门牌号，同时默认为通讯地址和家庭地址"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                    <el-form-item label="邮政编码" prop="postalCode">
+                        <el-input type="text" v-model="info.postalCode"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            学生个人扩展信息<hr><br />
+            <el-row>
+                <el-col :span="4">
+                    <el-form-item label="是否独生子女" prop="isOneChild" class="left-item">
+                        <el-select v-model="info.isOneChild" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                    <el-form-item label="是否双女户" prop="hasDoubleGirls" class="left-item">
+                        <el-select v-model="info.hasDoubleGirls" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="是否留守儿童" prop="leftChildrenType" class="left-item">
+                        <el-select v-model="info.leftChildrenType" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in leftChildrenTypes" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                    <el-form-item label="进城务工随迁子女" prop="withEnterCities" class="left-item">
+                        <el-select v-model="info.withEnterCities" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            学生上下学交通方式<hr><br />
+            <el-row>
+                <el-col :span="4">
+                    <el-form-item label="上下学距离(公里)" prop="distance">
+                        <el-input type="text" v-model="info.distance" placeholder="公里"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                    <el-form-item label="乘坐校车" prop="schoolbus" class="left-item">
+                        <el-select v-model="info.schoolbus" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                    <el-form-item label="交通方式" prop="vehicle">
+                         <el-select v-model="info.vehicle" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in vehicles" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+学生家庭成员或监护人信息一<hr><br />
+            <el-row>
+                <el-col :span="6">
+                    <el-form-item label="姓名" prop="keeper1Name">
+                        <el-input type="text" v-model="info.keeper1Name" placeholder="监护人1姓名"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="关系" prop="relation1">
+                        <el-select v-model="info.relation1" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in relations" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="户口所在地" prop="householdPlaceCode1">
+                        <el-cascader
+                        size="large"
+                        :options="householdPlaceOptions"
+                        v-model="householdPlaceCode1ToArray"
+                        @change="handleHouseholdPlaceChange">
+                        </el-cascader>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="是否监护人" prop="keeper1" class="left-item">
+                        <el-select v-model="info.keeper1" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="6">
+                    <el-form-item label="联系电话" prop="contact1PhoneNumber">
+                        <el-input type="text" v-model="info.contact1PhoneNumber"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="18">
+                    <el-form-item label="现住址" prop="address1">
+                        <el-input type="text" v-model="info.address1" placeholder="可与学生一致，要到门牌号"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+学生家庭成员或监护人信息二<hr><br />
+            <el-row>
+                <el-col :span="6">
+                    <el-form-item label="姓名" prop="keeper2Name">
+                        <el-input type="text" v-model="info.keeper2Name" placeholder="监护人2姓名"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="关系" prop="relation2">
+                        <el-select v-model="info.relation2" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in relations" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="户口所在地" prop="householdPlaceCode2">
+                        <el-cascader
+                        size="large"
+                        :options="householdPlaceOptions"
+                        v-model="householdPlaceCode2ToArray"
+                        @change="handleHouseholdPlaceChange">
+                        </el-cascader>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="是否监护人" prop="keeper2" class="left-item">
+                        <el-select v-model="info.keeper2" clearable placeholder="请选择" class="block">
+                            <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="6">
+                    <el-form-item label="联系电话" prop="contact2PhoneNumber">
+                        <el-input type="text" v-model="info.contact2PhoneNumber"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="18">
+                    <el-form-item label="现住址" prop="address2">
+                        <el-input type="text" v-model="info.address2" placeholder="可与学生一致，要到门牌号"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
             <el-form-item>
                 <el-button type="primary" @click="submitForm('form')" :loading="loading">更新</el-button>
             </el-form-item>
-
         </el-form>
     </el-dialog>
 </template>
@@ -56,39 +293,120 @@
 
 <script>
     import { mapGetters } from 'vuex'
-    import Markdown from 'components/Markdown'
+    // import Markdown from 'components/Markdown'
+    import { checkIdNum } from 'src/utils/rules'
+    import { regionData } from 'element-china-area-data'
+    import { provinceAndCityData } from 'element-china-area-data'
     export default {
-        components: { Markdown },
+        // components: { Markdown },
         props: ['info'],
         data() {
+            // alert(console.log(info));
             return {
+                
+                birthPlaceOptions: regionData,
+                householdPlaceOptions: regionData,
+                grandPlaceOptions: provinceAndCityData,
                 dialogTableVisible: true,
                 loading: false,
                 rules: {
+                    //------学生个人基本信息
+                    studentName: [
+                        { required: true, message: '请填写学生姓名', trigger: 'change', type: 'string' }
+                    ],
                     sexType: [
                         { required: true, message: '请选择性别', trigger: 'change', type: 'string' }
+                    ],
+                    brithPlaceCode: [
+                        { required: true, message: '请选择出生地', trigger: 'change', type: 'string' }
+                    ],
+                    grandPlaceCode: [
+                        { required: true, message: '请选择籍贯', trigger: 'change', type: 'string' }
+                    ],
+                    ethnic: [
+                        { required: true, message: '请选择民族', trigger: 'change', type: 'string' }
+                    ],
+                    nation: [
+                        { required: true, message: '请选择国籍/地区', trigger: 'change', type: 'string' }
+                    ],
+                    contactPhoneNumber: [
+                        { required: true, message: '请填写联系电话', trigger: 'change', type: 'string' }
+                    ],
+                    notMainland: [
+                        { required: true, message: '请选择', trigger: 'change', type: 'string' }
                     ],
                     type: [
                         { required: true, message: '请选择身份证件类型', trigger: 'change', type: 'string' }
                     ],
-                    studentName: [
-                        { required: true, message: '请填写学生姓名', trigger: 'blur', type: 'string' }
-                    ],
                     studentID: [
-                        { required: true, message: '请填写身份证件号码', trigger: 'blur', type: 'string' }
+                        { required: true, message: '请填写身份证件号码', trigger: 'change', type: 'string' },
+                        { message: '请填写正确身份证件号码', validator: checkIdNum, trigger: 'change', type: 'string' },
                     ],
-                    title: [
-                        { required: true, message: '请填写文章标题', trigger: 'blur' }
+                    //------学生个人辅助信息
+                    householdPlaceCode: [
+                        { required: true, message: '请选择户口所在地', trigger: 'change', type: 'string' }
                     ],
-                    desc: [
-                        { required: true, message: '请填写文章描述', trigger: 'blur' }
+                    householdType: [
+                        { required: true, message: '请选择户口性质', trigger: 'change' }
                     ],
-                    markdown: [
-                        { required: true, message: '请填写文章内容', trigger: 'blur' }
+                    //------学生个人联系方式
+                    address: [
+                        { required: true, message: '请填现住址', trigger: 'change', type: 'string' }
                     ],
-                    releaseTime: [
-                        { required: true, message: '请选择文章的发布时间', trigger: 'change', type: 'date' }
-                    ]
+                    postalCode: [
+                        { required: true, message: '请填邮政编码', trigger: 'change', type: 'string' }
+                    ],
+                    //------学生个人扩展信息
+                    isOneChild: [
+                        { required: true, message: '请选择', trigger: 'change', type: 'string' }
+                    ],
+                    leftChildrenType: [
+                        { required: true, message: '请选择', trigger: 'change', type: 'string' }
+                    ],
+                    withEnterCities: [
+                        { required: true, message: '请选择', trigger: 'change', type: 'string' }
+                    ],
+                    hasDoubleGirls: [
+                        { required: true, message: '请选择', trigger: 'change', type: 'string' }
+                    ],
+                    //-------学生家庭成员或监护人信息一
+                    keeper1Name: [
+                        { required: true, message: '请填写', trigger: 'change', }
+                    ],
+                    relation1: [
+                        { required: true, message: '请选择', trigger: 'change', }
+                    ],
+                    keeper1: [
+                        { required: true, message: '请选择', trigger: 'change', }
+                    ],
+                    householdPlaceCode1: [
+                        { required: true, message: '请选择户口所在地', trigger: 'change', type: 'string' }
+                    ],
+                    contact1PhoneNumber: [
+                        { required: true, message: '请填联系电话', trigger: 'change', }
+                    ],
+                    address1: [
+                        { required: true, message: '请填写现住址', trigger: 'change', }
+                    ],
+                    //-------学生家庭成员或监护人信息二
+                    keeper2Name: [
+                        { required: true, message: '请填写', trigger: 'change', }
+                    ],
+                    relation2: [
+                        { required: true, message: '请选择', trigger: 'change', }
+                    ],
+                    keeper2: [
+                        { required: true, message: '请选择', trigger: 'change', }
+                    ],
+                    householdPlaceCode2: [
+                        { required: true, message: '请选择户口所在地', trigger:'change', type: 'string'  }
+                    ],
+                    contact2PhoneNumber: [
+                        { required: true, message: '请填联系电话', trigger: 'change', }
+                    ],
+                    address2: [
+                        { required: true, message: '请填写现住址', trigger: 'change', }
+                    ],
                 }
             }
         },
@@ -102,8 +420,7 @@
                     // console.log(this.info)
                     if (valid) {
                         try {
-                            this.info.html = this.info.markdown
-                            await this.$store.dispatch('updateBlog', this.info);
+                            await this.$store.dispatch('updateStudent', this.info);
                             this.loading = false;
                             // this.$router.push('/music/list');
                             this.close()
@@ -117,14 +434,67 @@
                         return false;
                     }
                 });
+            },
+            codeToArray(codeStr) {
+                return codeStr.split(",");
+            },
+            handleBirthPlaceChange (value) {
+                console.log(value[2])
+            },
+            handleGrandPlaceChange (value) {
+                console.log(value[1])
+            },
+            handleHouseholdPlaceChange (value) {
+                console.log(value[1])
             }
-
         },
         computed: {
+            birthPlaceCodeToArray: {
+                get(){
+                    return this.info.brithPlaceCode.split(",");
+                },
+            },
+            grandPlaceCodeToArray: {
+                get(){
+                    return this.info.grandPlaceCode.split(",");
+                },
+            },
+            householdPlaceCodeToArray: {
+                get(){
+                    return this.info.householdPlaceCode.split(",");
+                },
+            },
+            householdPlaceCode1ToArray: {
+                get(){
+                    return this.info.householdPlaceCode1.split(",");
+                },
+            },
+            householdPlaceCode2ToArray: {
+                get(){
+                    return this.info.householdPlaceCode2.split(",");
+                },
+            },
             ...mapGetters([
-                'blogTypes',
+                'IDTypes',
                 'sexTypes',
-                'sources'
+                'ethnics',
+                'nations',
+                'sources',
+                'healthStatuses',
+                'ethnics',
+                'studentSources',
+                'householdTypes',
+                'politicalStatuses',
+                'leftChildrenTypes',
+                'notMainlands', 
+                'admissionModes', 
+                'switchStates',
+                'bloodTypes',
+                'residentTypes',
+                'vehicles',
+                'relations',
+                'disabilities', 
+		        'mainstreams',
             ])
         }
     }
