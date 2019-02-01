@@ -27,8 +27,8 @@ module.exports = {
             let reg = new RegExp(keyword, 'i')
             let data = await ctx.findPage(studentModel, {
                 $or: [
-                    {type: { $regex: reg}},
-                    {title: { $regex: reg}}
+                    {studentName: { $regex: reg}},
+                    {studentID: { $regex: reg}}
                 ]
             }, {createTime: 0, html: 0}, {limit: pagesize*1, skip: (pageindex-1)*pagesize});
             ctx.send(data)

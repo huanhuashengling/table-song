@@ -93,14 +93,14 @@
                 { label: '成员1关系',     prop: 'relation1', format: true,},
                 { label: '成员1户口所在地',     prop: 'brithPlaceCode1', format: true, minWidth: '220' },
                 { label: '成员1联系电话',     prop: 'contact1PhoneNumber', },
-                { label: '是否监护人',     prop: 'keeper1', format: true, },
+                { label: '是否监护人1',     prop: 'keeper1', format: true, },
 
                 //-------学生家庭成员或监护人信息二
                 { label: '成员2姓名',     prop: 'keeper2Name', },
                 { label: '成员2关系',     prop: 'relation2', format: true,},
                 { label: '成员2户口所在地',     prop: 'brithPlaceCode2', format: true, minWidth: '220' },
                 { label: '成员2联系电话',     prop: 'contact2PhoneNumber', },
-                { label: '是否监护人',     prop: 'keeper2', format: true, },
+                { label: '是否监护人2',     prop: 'keeper2', format: true, },
                 ],
                 multipleSelection: []
             }
@@ -168,8 +168,11 @@
                     case "成员2户口所在地":
                         return this.codeFmt(row.householdPlaceCode2);
                     break;
-                    case "是否监护人":
-                        return ("02" == row.sexType)?'是':'否';
+                    case "是否监护人1":
+                        return ("01" == row.keeper1)?'是':'否';
+                    break;
+                    case "是否监护人2":
+                        return ("01" == row.keeper2)?'是':'否';
                     break;
                 }
             },
