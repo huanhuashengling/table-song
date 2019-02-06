@@ -34,14 +34,27 @@ export const asyncRouterMap = [
     },
     {
         path: '/student',
-        name: '学生学籍',
+        name: '新生学籍注册',
         component: _import_('Layout/index'),
         redirect: '/student/list',
         dropdown: true,
         icon: 'zuowen',
         children: [
-            { path: 'list', component: _import_('Student/list/index'), name: '学生学籍列表' },
+            { path: 'list', component: _import_('Student/list/index'), name: '新生学籍列表' },
             { path: 'add', component: _import_('Student/add/index'), name: '添加学生学籍' }
+        ]
+    },
+    {
+        path: '/student',
+        name: '在校学籍管理',
+        component: _import_('Layout/index'),
+        redirect: '/student/list',
+        dropdown: true,
+        icon: 'zuowen',
+        children: [
+            { path: 'list', component: _import_('Student/list/index'), name: '在校学籍列表' },
+            { path: 'add', component: _import_('Student/add/index'), name: '在校学籍导入' },
+            { path: 'add', component: _import_('Student/add/index'), name: '在校学籍导出' },
         ]
     }
 ]
