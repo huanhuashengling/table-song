@@ -4,7 +4,10 @@
         <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="keyword" @keydown.enter.native="getStudentList"></el-input>
         <el-button type="primary" icon="el-icon-search" :loading="loading" @click="getStudentList">搜索</el-button>
     </div>
-    <el-table ref="multipleTable" :data="studentList" tooltip-effect="dark" stripe border>
+    <div class="export">
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel">导出</el-button>
+    </div>
+    <el-table ref="multipleTable" id="student-list" :data="studentList" tooltip-effect="dark" stripe border>
         <el-table-column show-overflow-tooltip type="index" width="55" align="center" header-align="center" :index="increment"></el-table-column>
         <el-table-column show-overflow-tooltip v-if="!item.hidden && !item.filters && !item.format" v-for="(item, index) in headerOptions" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign || 'center'" :align="item.align || 'center'" :sortable="item.sort || false"  :min-width="item.minWidth || 150">
             <template slot-scope="scope">
@@ -48,6 +51,8 @@
     import EditComponent from '../edit/index'
     import { sexTypes, ethnics, nations, relations } from 'store/modules/classify'
     import { CodeToText, TextToCode } from 'element-china-area-data'
+    import FileSaver from 'file-saver'
+    import XLSX from 'xlsx'
     export default {
         components: {
             EditComponent
@@ -129,7 +134,11 @@
             },
             codeFmt(codeStr) {
                 var returnStr = "";
-                var codeArr = codeStr.split(",");
+                var codeArr = codeStr;
+                if ("string" == typeof(codeStr)) {
+                    codeArr = codeStr.split(",");
+                }
+                
                 for (let index = 0; index < codeArr.length; index++) {
                     returnStr += CodeToText[codeArr[index]];
                 }
@@ -154,7 +163,7 @@
                         return ("01" == row.ethnic)?'汉族':this.basicFmt(ethnics, row.ethnic);
                     break;
                     case "国家地区":
-                        return ("CN" == row.nation)?'中国':this.basicFmt(nations, row.nation);
+                        return ("CN" == row.nation)?'中国':this.nationFmt(nations, row.nation);
                     break;
                     case "成员1关系":
                         return this.basicFmt(relations, row.relation1);
@@ -238,7 +247,23 @@
             },
             filterTag(value, row) {
                 return row.type.some( v => v === value)
-            }
+            },
+            exportExcel () {
+                /* generate workbook object from table */
+                var wb = XLSX.utils.table_to_book(document.querySelector('#student-list'));
+                var ws = wb.Sheets.Sheet1;
+                var cell = ws[XLSX.utils.encode_cell({r:1,c:9})];
+                if(cell && cell.t == 'n') {
+                    cell.t = "s";
+                }
+                
+                /* get binary string as output */
+                var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+                try {
+                    FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'sheetjs.xlsx')
+                } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+                return wbout
+            },
         },
         computed: {
             ...mapGetters([

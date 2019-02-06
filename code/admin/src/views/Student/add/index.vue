@@ -317,7 +317,6 @@
     import Markdown from 'components/Markdown'
     import { checkIdNum } from 'src/utils/rules'
     import { regionData } from 'element-china-area-data'
-    import { provinceAndCityData } from 'element-china-area-data'
     export default {
         // components: { Markdown },
         data() {
@@ -404,7 +403,7 @@
                 },
                 birthPlaceOptions: regionData,
                 householdPlaceOptions: regionData,
-                grandPlaceOptions: provinceAndCityData,
+                grandPlaceOptions: regionData,
                 loading: false,
                 rules: {
                     //------学生个人基本信息

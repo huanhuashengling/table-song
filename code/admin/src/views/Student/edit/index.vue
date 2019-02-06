@@ -212,7 +212,7 @@
                         size="large"
                         :options="householdPlaceOptions"
                         v-model="householdPlaceCode1ToArray"
-                        @change="handleHouseholdPlaceChange">
+                        @change="handleHouseholdPlace1Change">
                         </el-cascader>
                     </el-form-item>
                 </el-col>
@@ -258,7 +258,7 @@
                         size="large"
                         :options="householdPlaceOptions"
                         v-model="householdPlaceCode2ToArray"
-                        @change="handleHouseholdPlaceChange">
+                        @change="handleHouseholdPlace2Change">
                         </el-cascader>
                     </el-form-item>
                 </el-col>
@@ -296,7 +296,6 @@
     // import Markdown from 'components/Markdown'
     import { checkIdNum } from 'src/utils/rules'
     import { regionData } from 'element-china-area-data'
-    import { provinceAndCityData } from 'element-china-area-data'
     export default {
         // components: { Markdown },
         props: ['info'],
@@ -306,7 +305,7 @@
                 
                 birthPlaceOptions: regionData,
                 householdPlaceOptions: regionData,
-                grandPlaceOptions: provinceAndCityData,
+                grandPlaceOptions: regionData,
                 dialogTableVisible: true,
                 loading: false,
                 rules: {
@@ -318,10 +317,10 @@
                         { required: true, message: '请选择性别', trigger: 'change', type: 'string' }
                     ],
                     brithPlaceCode: [
-                        { required: true, message: '请选择出生地', trigger: 'change', type: 'string' }
+                        { required: true, message: '请选择出生地', trigger: 'change', }
                     ],
                     grandPlaceCode: [
-                        { required: true, message: '请选择籍贯', trigger: 'change', type: 'string' }
+                        { required: true, message: '请选择籍贯', trigger: 'change', }
                     ],
                     ethnic: [
                         { required: true, message: '请选择民族', trigger: 'change', type: 'string' }
@@ -344,7 +343,7 @@
                     ],
                     //------学生个人辅助信息
                     householdPlaceCode: [
-                        { required: true, message: '请选择户口所在地', trigger: 'change', type: 'string' }
+                        { required: true, message: '请选择户口所在地', trigger: 'change', }
                     ],
                     householdType: [
                         { required: true, message: '请选择户口性质', trigger: 'change' }
@@ -380,7 +379,7 @@
                         { required: true, message: '请选择', trigger: 'change', }
                     ],
                     householdPlaceCode1: [
-                        { required: true, message: '请选择户口所在地', trigger: 'change', type: 'string' }
+                        { required: true, message: '请选择户口所在地', trigger: 'change', }
                     ],
                     contact1PhoneNumber: [
                         { required: true, message: '请填联系电话', trigger: 'change', }
@@ -399,7 +398,7 @@
                         { required: true, message: '请选择', trigger: 'change', }
                     ],
                     householdPlaceCode2: [
-                        { required: true, message: '请选择户口所在地', trigger:'change', type: 'string'  }
+                        { required: true, message: '请选择户口所在地', trigger:'change', }
                     ],
                     contact2PhoneNumber: [
                         { required: true, message: '请填联系电话', trigger: 'change', }
@@ -417,7 +416,7 @@
             submitForm(formName) {
                 this.loading = true;
                 this.$refs[formName].validate( async (valid) => {
-                    // console.log(this.info)
+                    console.log(this.info)
                     if (valid) {
                         try {
                             await this.$store.dispatch('updateStudent', this.info);
@@ -435,44 +434,74 @@
                     }
                 });
             },
-            codeToArray(codeStr) {
-                return codeStr.split(",");
-            },
             handleBirthPlaceChange (value) {
+                this.birthPlaceCodeToArray = value;
                 console.log(value[2])
             },
             handleGrandPlaceChange (value) {
+                this.grandPlaceCodeToArray = value;
                 console.log(value[1])
             },
             handleHouseholdPlaceChange (value) {
+                this.householdPlaceCodeToArray = value;
                 console.log(value[1])
+            },
+            handleHouseholdPlace1Change (value) {
+                this.householdPlaceCode1ToArray = value;
+                console.log(value[1])
+            },
+            handleHouseholdPlace2Change (value) {
+                this.householdPlaceCode2ToArray = value;
+                console.log(value[1])
+            },
+            arrayConfirm (value) {
+                if ("string" == typeof(value)) {
+                    return value.split(",");
+                } else {
+                    return value;
+                }
             }
         },
         computed: {
             birthPlaceCodeToArray: {
                 get(){
-                    return this.info.brithPlaceCode.split(",");
+                    return this.arrayConfirm(this.info.brithPlaceCode);
                 },
+                set(value){
+                    this.info.brithPlaceCode = value;
+                }
             },
             grandPlaceCodeToArray: {
                 get(){
-                    return this.info.grandPlaceCode.split(",");
+                    return this.arrayConfirm(this.info.grandPlaceCode);
                 },
+                set(value){
+                    this.info.grandPlaceCode = value;
+                }
             },
             householdPlaceCodeToArray: {
                 get(){
-                    return this.info.householdPlaceCode.split(",");
+                    return this.arrayConfirm(this.info.householdPlaceCode);
                 },
+                set(value){
+                    this.info.householdPlaceCode = value;
+                }
             },
             householdPlaceCode1ToArray: {
                 get(){
-                    return this.info.householdPlaceCode1.split(",");
+                    return this.arrayConfirm(this.info.householdPlaceCode1);
                 },
+                set(value){
+                    this.info.householdPlaceCode1 = value;
+                }
             },
             householdPlaceCode2ToArray: {
                 get(){
-                    return this.info.householdPlaceCode2.split(",");
+                    return this.arrayConfirm(this.info.householdPlaceCode2);
                 },
+                set(value){
+                    this.info.householdPlaceCode2 = value;
+                }
             },
             ...mapGetters([
                 'IDTypes',
