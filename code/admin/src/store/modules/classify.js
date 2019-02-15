@@ -12,7 +12,7 @@ export const politicalStatuses = [
     { id: "03",  name: '共青团员' },
     { id: "04",  name: '少先队员' },
     { id: "05",  name: '群众' }] 
-//博客分类
+//身份证件类型
 export const IDTypes = [ 
     { id: "01", name: '居民身份证' },
     { id: "02", name: '香港特区护照/身份证明' },
@@ -198,6 +198,91 @@ export const ethnics = [
     {"id": "55", "name": "珞巴族"},
     {"id": "56", "name": "基诺族" }
 ]
+
+export const nameDescDatas = [
+    //------学生个人基本信息
+    {"desc": "学生姓名", "name": "studentName", },                
+    {"desc": "性别", "name": "sexType", "data": "sexTypes",},                    
+    {"desc": "出生日期", "name": "birthDate", "data":"", },                       
+    {"desc": "出生地", "name": "brithPlaceCode", "data":"", },             
+    {"desc": "籍贯", "name": "grandPlaceCode", "data":"", },             
+    {"desc": "民族", "name": "ethnic", "data": "ethnics",},                                
+    {"desc": "国籍地区", "name": "nation", "data": "nations",},                             
+    {"desc": "联系电话", "name": "contactPhoneNumber", "data":"", },         
+    {"desc": "港澳台侨外", "name": "notMainland", "data": "notMainlands",},                       
+    {"desc": "身份证件类型", "name": "IDType", "data": "IDTypes",},                          
+    {"desc": "身份证件号", "name": "studentID", "data":"", },                  
+    {"desc": "政治面貌", "name": "politicalStatus", "data": "politicalStatuses",},                  
+    {"desc": "健康状况", "name": "healthStatus", "data": "healthStatuses",},                     
+    //------学生个人辅助信息
+    {"desc": "户口所在地", "name": "householdPlaceCode", "data":"", },         
+    {"desc": "户口性质", "name": "householdType", "data": "householdTypes",},              
+    {"desc": "特长", "name": "strongPoint", "data":"", },                
+    {"desc": "身份证有效期", "name": "IDValidityPeriod", "data":"", },           
+    {"desc": "曾用名", "name": "usedName", "data":"", },                   
+    //------学生学籍辅助信息
+    {"desc": "学籍号", "name": "nationalStudentNumber", "data":"", },      
+    {"desc": "班内学号", "name": "inClassNum", "data":"", },                      
+    {"desc": "年级", "name": "grade", "data":"", },                              
+    {"desc": "班级", "name": "classNum", "data":"", },                           
+    {"desc": "入学年月", "name": "enterSchoolYearMonth", "data":"", },            
+    {"desc": "入学方式", "name": "admissionMode", "data": "admissionModes",},                  
+    {"desc": "就读方式", "name": "residentType", "data": "residentTypes",},                   
+    {"desc": "学生来源", "name": "studentSource", "data": "studentSources",},                  
+    //------学生个人联系方式
+    {"desc": "现住址", "name": "address", "data":"", },                    
+    {"desc": "通讯地址", "name": "contactAddress", "data":"", },             
+    {"desc": "家庭住址", "name": "familyAddress", "data":"", },                  
+    {"desc": "邮政编码", "name": "postalCode", "data":"", },                 
+    //------学生个人扩展信息
+    {"desc": "是否独生子女", "name": "isOneChild", "data": "switchStates",},                 
+    {"desc": "是否受过学前教育", "name": "hasPreschoolEducation", "data": "switchStates",},      
+    {"desc": "是否留守儿童", "name": "leftChildrenType", "data": "leftChildrenTypes",},           
+    {"desc": "是否进城务工随迁子女", "name": "withEnterCities", "data": "switchStates",},            
+    {"desc": "是否孤儿", "name": "orphan", "data": "switchStates",},                     
+    {"desc": "是否烈士或优抚子女", "name": "martyr", "data": "switchStates",},                     
+    {"desc": "随班就读", "name": "mainstream", "data": "mainstreams",},                 
+    {"desc": "残疾类型", "name": "disability", "data": "disabilities",},                 
+    {"desc": "是否政府购买学位", "name": "govBuySeat", "data": "switchStates",},                 
+    {"desc": "是否需要申请资助", "name": "needHelp", "data": "switchStates",},                   
+    {"desc": "是否享受一补", "name": "enjoyHelp", "data": "switchStates",},                  
+    
+    //------学生上下学交通方式
+    {"desc": "上下学距离", "name": "distance", "data":"", },                   
+    {"desc": "交通方式", "name": "vehicle", "data": "vehicles",},                    
+    {"desc": "是否需要校车", "name": "schoolbus", "data": "switchStates",},                 
+    //-------学生家庭成员或监护人信息一
+    {"desc": "监护人1姓名", "name": "keeper1Name", "data":"", },                
+    {"desc": "监护人1关系", "name": "relation1", "data": "relations",},                  
+    {"desc": "监护人1关系说明", "name": "relation1desc", "data":"", },              
+    {"desc": "监护人1民族", "name": "keeper1ethnic", "data": "ethnics",},              
+    {"desc": "监护人1工作单位", "name": "keeper1workplace", "data":"", },           
+    {"desc": "监护人1现住址", "name": "address1", "data":"", },                   
+    {"desc": "监护人1户口所在地", "name": "householdPlaceCode1", "data":"", },        
+    {"desc": "监护人1联系电话", "name": "contact1PhoneNumber", "data":"", },        
+    {"desc": "是否是监护人", "name": "keeper1", "data": "switchStates",},                    
+    {"desc": "监护人1身份证件类型", "name": "keeper1IDtype", "data": "IDTypes",},              
+    {"desc": "监护人1身份证件号", "name": "keeper1ID", "data":"", },                  
+    {"desc": "监护人1职务", "name": "keeper1position", "data":"", },            
+    //-------学生家庭成员或监护人信息二
+    {"desc": "监护人2姓名", "name": "keeper2Name", "data":"", },                
+    {"desc": "监护人2关系", "name": "relation2", "data": "relations",},                  
+    {"desc": "监护人2关系说明", "name": "relation2desc", "data":"", },              
+    {"desc": "监护人2民族", "name": "keeper2ethnic", "data": "ethnics",},              
+    {"desc": "监护人2工作单位", "name": "keeper2workplace", "data":"", },           
+    {"desc": "监护人2现住址", "name": "address2", "data":"", },                   
+    {"desc": "监护人2户口所在地", "name": "householdPlaceCode2", "data":"", },        
+    {"desc": "监护人2联系电话", "name": "contact2PhoneNumber", "data":"", },        
+    {"desc": "是否是监护人", "name": "keeper2", "data": "switchStates",},                    
+    {"desc": "监护人2身份证件类型", "name": "keeper2IDtype", "data": "IDTypes",},              
+    {"desc": "监护人2身份证件号", "name": "keeper2ID", "data":"", },                  
+    {"desc": "监护人2职务", "name": "keeper2position", "data":"", },            
+    
+    //------市学籍信息
+    {"desc": "是否双女户", "name": "hasDoubleGirls", "data":"", },             
+    {"desc": "市学籍", "name": "cityStudentNumber", "data":"", },          
+]
+
 //所有的国籍
 export const nations = [
   {code: "HK", en: "Hong Kong", cn: "香港"},  

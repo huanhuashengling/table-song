@@ -29,19 +29,20 @@ export const asyncRouterMap = [
         icon: 'authority',
         children: [
             { path: 'list', component: _import_('Permission/list/index'), name: '管理员列表' },
-            { path: 'add', component: _import_('Permission/add/index'), name: '添加管理员' }
+            { path: 'add', component: _import_('Permission/add/index'), name: '添加管理员' },
         ]
     },
     {
-        path: '/student',
+        path: '/pre_student',
         name: '新生学籍注册',
         component: _import_('Layout/index'),
-        redirect: '/student/list',
+        redirect: '/pre_student/list',
         dropdown: true,
         icon: 'zuowen',
         children: [
-            { path: 'list', component: _import_('Student/list/index'), name: '新生学籍列表' },
-            { path: 'add', component: _import_('Student/add/index'), name: '添加学生学籍' }
+            { path: 'list', component: _import_('PreStudent/list/index'), name: '新生学籍列表' },
+            { path: 'add', component: _import_('PreStudent/add/index'), name: '添加学生学籍' },
+            { path: 'export', component: _import_('PreStudent/export/index'), name: '导出注册学籍' },
         ]
     },
     {
@@ -53,8 +54,8 @@ export const asyncRouterMap = [
         icon: 'zuowen',
         children: [
             { path: 'list', component: _import_('Student/list/index'), name: '在校学籍列表' },
-            { path: 'add', component: _import_('Student/add/index'), name: '在校学籍导入' },
-            { path: 'add', component: _import_('Student/add/index'), name: '在校学籍导出' },
+            { path: 'import', component: _import_('Student/import/index'), name: '在校学籍导入' },
+            { path: 'export', component: _import_('Student/export/index'), name: '在校学籍导出' },
         ]
     }
 ]

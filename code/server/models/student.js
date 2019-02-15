@@ -46,7 +46,7 @@ let studentSchema = db.Schema({
     govBuySeat: String,                 //43  是否政府购买学位
     needHelp: String,                   //44  是否需要申请资助
     enjoyHelp: String,                  //45  是否享受一补
-    hasDoubleGirls: String,             //    是否双女户
+    
     //------学生上下学交通方式
     distance: String,                   //46  上下学距离
     vehicle: String,                    //47  交通方式
@@ -77,6 +77,13 @@ let studentSchema = db.Schema({
     keeper2IDtype: String,              //70  监护人2身份证类型
     keeper2ID: String,                  //71  监护人2身份证号码
     keeper2position: String,            //72  监护人2职务
+    
+    //市学籍信息
+    hasDoubleGirls: String,             //    是否双女户
+    cityStudentNumber: String,          //    市学籍
+
+    isPre: String,                      //    区分在校学生和未注册学籍的学生
+
     createTime: { type: Date, default: Date.now}
 })
 export default db.model('student', studentSchema)

@@ -1,19 +1,6 @@
 <template>
-<article>
-    <el-row>
-        <el-col :span="8">
-            <h2>学校名称：长沙市芙蓉区燕山小学</h2>
-        </el-col>
-        <el-col :span="8">
-            <h2>学校标识码：2143019582</h2>
-        </el-col>
-        <el-col :span="8">
-            <h2>信息保密协议</h2>
-        </el-col>
-    </el-row>
-    <div class="box">
-        学生个人基础信息<hr><br />
-        <el-form :model="info" :rules="rules" ref="form" label-width="110px" class="form">
+    <el-dialog title="学籍信息更新" :visible.sync="dialogTableVisible" class="edit-wrapper" @close="close" width="80%">
+        <el-form :model="info" :rules="rules" ref="form" label-width="100px" class="form">
             <el-row>
                 <el-col :span="6">
                     <el-form-item label="学生姓名" prop="studentName">
@@ -48,7 +35,7 @@
                         <el-cascader
                         size="medium"
                         :options="birthPlaceOptions"
-                        v-model="info.brithPlaceCode"
+                        v-model="birthPlaceCodeToArray"
                         @change="handleBirthPlaceChange">
                         </el-cascader>
                     </el-form-item>
@@ -58,7 +45,7 @@
                         <el-cascader
                         size="large"
                         :options="grandPlaceOptions"
-                        v-model="info.grandPlaceCode"
+                        v-model="grandPlaceCodeToArray"
                         @change="handleGrandPlaceChange">
                         </el-cascader>
                     </el-form-item>
@@ -104,7 +91,7 @@
                         <el-cascader
                         size="large"
                         :options="householdPlaceOptions"
-                        v-model="info.householdPlaceCode"
+                        v-model="householdPlaceCodeToArray"
                         @change="handleHouseholdPlaceChange">
                         </el-cascader>
                     </el-form-item>
@@ -224,8 +211,8 @@
                         <el-cascader
                         size="large"
                         :options="householdPlaceOptions"
-                        v-model="info.householdPlaceCode1"
-                        @change="handleHouseholdPlaceChange">
+                        v-model="householdPlaceCode1ToArray"
+                        @change="handleHouseholdPlace1Change">
                         </el-cascader>
                     </el-form-item>
                 </el-col>
@@ -270,8 +257,8 @@
                         <el-cascader
                         size="large"
                         :options="householdPlaceOptions"
-                        v-model="info.householdPlaceCode2"
-                        @change="handleHouseholdPlaceChange">
+                        v-model="householdPlaceCode2ToArray"
+                        @change="handleHouseholdPlace2Change">
                         </el-cascader>
                     </el-form-item>
                 </el-col>
@@ -296,133 +283,44 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <p v-if="errors.length">
-                <b>请先修改以下内容:</b>
-                <ul>
-                <li v-for="error in errors">{{ error }}</li>
-                </ul>
-            </p>
             <el-form-item>
-                <el-button type="primary" @click="saveForm('form')" :loading="loading">保存内容</el-button>
-                <el-button type="primary" @click="submitForm('form')" :loading="loading">确认提交</el-button>
+                <el-button type="primary" @click="submitForm('form')" :loading="loading">更新</el-button>
             </el-form-item>
-
         </el-form>
-    </div>
-</article>
+    </el-dialog>
 </template>
+
 
 <script>
     import { mapGetters } from 'vuex'
-    import Markdown from 'components/Markdown'
+    // import Markdown from 'components/Markdown'
     import { checkIdNum } from 'src/utils/rules'
     import { regionData } from 'element-china-area-data'
     export default {
         // components: { Markdown },
+        props: ['info'],
         data() {
+            // alert(console.log(info));
             return {
-                errors: [],
-                info: {
-                    //------学生个人基本信息
-                    studentName: '',                //1  姓名
-                    sexType: '',                    //2  性别
-                    birthDate: '',                  //3  出生日期    不显示  从身份证获取
-                    brithPlaceCode: [],             //4  出生地
-                    grandPlaceCode:[],              //5  籍贯
-                    ethnic: '01',                   //6  民族           默认汉族
-                    nation: 'CN',                   //7  国家地区        默认中国
-                    contactPhoneNumber: '',         //31 联系电话
-                    notMainland: '01',              //10 港澳台侨外       默认否
-                    IDType: '01',                     //8  身份证件类型     默认居民身份证
-                    studentID: '',                  //9  身份证号
-                    politicalStatus: '01',          //11  政治面貌    不显示  默认少先队员
-                    healthStatus: '01',             //12  健康状况    不显示  默认健康或良好
-                    //------学生个人辅助信息
-                    householdPlaceCode: [],         //17  户口所在地
-                    householdType: '',              //18  户口性质
-                    strongPoint: '',                //19  特长
-                    IDValidityPeriod: '',           //16  身份证有效期
-                    usedName: '',                   //15  曾用名
-                    //------学生学籍辅助信息
-                    nationalStudentNumber: '',      //20  全国学籍号
-                    inClassNum: '',                 //21  班内学号     默认空
-                    grade: '小学2019级',             //22  年级        默认
-                    classNum: '',                   //23  班级        默认空
-                    enterSchoolYearMonth: '201909', //24  入学年月     默认
-                    admissionMode: '01',            //25  入学方式    默认
-                    residentType: '01',             //26  就读方式    默认
-                    studentSource: '01',            //27  学生来源    默认
-                    //------学生个人联系方式
-                    address: '',                    //28  现住址
-                    contactAddress: '',             //29  现住址
-                    familyAddress: '',              //30  现住址    
-                    postalCode: '',                 //32  邮政编码
-                    //------学生个人扩展信息
-                    isOneChild: '',                 //35  是否独生子女
-                    hasPreschoolEducation: '',      //36  是否受过学前教育
-                    leftChildrenType: '01',         //37  是否留守儿童
-                    withEnterCities: '',            //38  是否进城务工随迁子女
-                    orphan: '02',                   //39  是否孤儿
-                    martyr: '02',                   //40  是否烈士或优抚子女
-                    mainstream: '01',               //41  随班就读
-                    disability: '01',               //42  残疾类型
-                    govBuySeat: '02',               //43  是否政府购买学位
-                    needHelp: '02',                 //44  是否需要申请资助
-                    enjoyHelp: '02',                //45  是否享受一补
-                    //------学生上下学交通方式
-                    distance: '',                   //46  上下学距离
-                    vehicle: '',                    //47  交通方式
-                    schoolbus: '02',                //48  是否需要校车
-                    //-------学生家庭成员或监护人信息一
-                    keeper1Name: '',                //49  监护人1姓名
-                    relation1: '01',                //50  监护人1关系
-                    relation1desc: '',              //51  监护人1关系说明
-                    keeper1ethnic: '',              //52  监护人1民族
-                    keeper1workplace: '',           //53  监护人1工作单位
-                    address1: '',                   //54  监护人1现住址
-                    householdPlaceCode1: [],        //55  监护人1户口所在地
-                    contact1PhoneNumber: '',        //56  监护人1联系电话
-                    keeper1: '01',                  //57  是否是监护人
-                    keeper1IDtype: '',              //58  监护人1身份证类型
-                    keeper1ID: '',                  //59  监护人1身份证号码
-                    keeper1position: '',            //60  监护人1职务
-                    //-------学生家庭成员或监护人信息二
-                    keeper2Name: '',                //61  监护人2姓名
-                    relation2: '02',                //62  监护人2关系
-                    relation2desc: '',              //63  监护人2关系说明
-                    keeper2ethnic: '',              //64  监护人2民族
-                    keeper2workplace: '',           //65  监护人2工作单位
-                    address2: '',                   //66  监护人2现住址
-                    householdPlaceCode2: [],        //67  监护人2户口所在地
-                    contact2PhoneNumber: '',        //68  监护人2联系电话
-                    keeper2: '01',                  //69  是否是监护人
-                    keeper2IDtype: '',              //70  监护人2身份证类型
-                    keeper2ID: '',                  //71  监护人2身份证号码
-                    keeper2position: '',            //72  监护人2职务
-
-                    //市学籍信息
-                    hasDoubleGirls: '02',            //    是否双女户
-                    cityStudentNumber: '',           //    市学籍
-
-                    isPre: '01',                     //    区分在校学生和未注册学籍的学生
-                },
+                
                 birthPlaceOptions: regionData,
                 householdPlaceOptions: regionData,
                 grandPlaceOptions: regionData,
+                dialogTableVisible: true,
                 loading: false,
                 rules: {
                     //------学生个人基本信息
                     studentName: [
-                        { required: true, message: '请填写学生姓名', trigger: 'blur', type: 'string' }
+                        { required: true, message: '请填写学生姓名', trigger: 'change', type: 'string' }
                     ],
                     sexType: [
                         { required: true, message: '请选择性别', trigger: 'change', type: 'string' }
                     ],
                     brithPlaceCode: [
-                        { required: true, message: '请选择出生地', trigger: 'change', type: 'array' }
+                        { required: true, message: '请选择出生地', trigger: 'change', }
                     ],
                     grandPlaceCode: [
-                        { required: true, message: '请选择籍贯', trigger: 'change', type: 'array' }
+                        { required: true, message: '请选择籍贯', trigger: 'change', }
                     ],
                     ethnic: [
                         { required: true, message: '请选择民族', trigger: 'change', type: 'string' }
@@ -440,15 +338,15 @@
                         { required: true, message: '请选择身份证件类型', trigger: 'change', type: 'string' }
                     ],
                     studentID: [
-                        { required: true, message: '请填写身份证件号码', trigger: 'blur', type: 'string' },
-                        { message: '请填写正确身份证件号码', validator: checkIdNum, trigger: 'blur', type: 'string' },
+                        { required: true, message: '请填写身份证件号码', trigger: 'change', type: 'string' },
+                        { message: '请填写正确身份证件号码', validator: checkIdNum, trigger: 'change', type: 'string' },
                     ],
                     //------学生个人辅助信息
                     householdPlaceCode: [
-                        { required: true, message: '请选择户口所在地', trigger: 'change', type: 'array' }
+                        { required: true, message: '请选择户口所在地', trigger: 'change', }
                     ],
                     householdType: [
-                        { required: true, message: '请选择户口性质', trigger: 'blur' }
+                        { required: true, message: '请选择户口性质', trigger: 'change' }
                     ],
                     //------学生个人联系方式
                     address: [
@@ -472,76 +370,139 @@
                     ],
                     //-------学生家庭成员或监护人信息一
                     keeper1Name: [
-                        { required: true, message: '请填写', trigger: 'blur' }
+                        { required: true, message: '请填写', trigger: 'change', }
                     ],
                     relation1: [
-                        { required: true, message: '请选择', trigger: 'blur' }
+                        { required: true, message: '请选择', trigger: 'change', }
                     ],
                     keeper1: [
-                        { required: true, message: '请选择', trigger: 'blur' }
+                        { required: true, message: '请选择', trigger: 'change', }
                     ],
                     householdPlaceCode1: [
-                        { required: true, message: '请选择户口所在地', trigger: 'blur', type: 'array' }
+                        { required: true, message: '请选择户口所在地', trigger: 'change', }
                     ],
                     contact1PhoneNumber: [
-                        { required: true, message: '请填联系电话', trigger: 'blur' }
+                        { required: true, message: '请填联系电话', trigger: 'change', }
                     ],
                     address1: [
-                        { required: true, message: '请填写现住址', trigger: 'blur' }
+                        { required: true, message: '请填写现住址', trigger: 'change', }
                     ],
                     //-------学生家庭成员或监护人信息二
                     keeper2Name: [
-                        { required: true, message: '请填写', trigger: 'blur' }
+                        { required: true, message: '请填写', trigger: 'change', }
                     ],
                     relation2: [
-                        { required: true, message: '请选择', trigger: 'blur' }
+                        { required: true, message: '请选择', trigger: 'change', }
                     ],
                     keeper2: [
-                        { required: true, message: '请选择', trigger: 'blur' }
+                        { required: true, message: '请选择', trigger: 'change', }
                     ],
                     householdPlaceCode2: [
-                        { required: true, message: '请选择户口所在地', trigger: 'blur', type: 'array'  }
+                        { required: true, message: '请选择户口所在地', trigger:'change', }
                     ],
                     contact2PhoneNumber: [
-                        { required: true, message: '请填联系电话', trigger: 'blur' }
+                        { required: true, message: '请填联系电话', trigger: 'change', }
                     ],
                     address2: [
-                        { required: true, message: '请填写现住址', trigger: 'blur' }
+                        { required: true, message: '请填写现住址', trigger: 'change', }
                     ],
                 }
             }
         },
         methods: {
+            close() {
+                this.$emit('close')
+            },
             submitForm(formName) {
                 this.loading = true;
                 this.$refs[formName].validate( async (valid) => {
+                    console.log(this.info)
                     if (valid) {
-                        try{
-                            // this.info.html = this.info.markdown
-                            await this.$store.dispatch('addStudent', this.info);
-                            this.loading = false
-                            this.$router.push('/student/list')
-                        }catch(e) {
-                            this.loading = false
+                        try {
+                            await this.$store.dispatch('updateStudent', this.info);
+                            this.loading = false;
+                            // this.$router.push('/music/list');
+                            this.close()
+                        }catch (e) {
+                            this.loading = false;
                         }
+                        
+
                     } else {
                         console.log('error submit!!');
-                        this.loading = false;
                         return false;
                     }
                 });
             },
             handleBirthPlaceChange (value) {
+                this.birthPlaceCodeToArray = value;
                 console.log(value[2])
             },
             handleGrandPlaceChange (value) {
+                this.grandPlaceCodeToArray = value;
                 console.log(value[1])
             },
             handleHouseholdPlaceChange (value) {
+                this.householdPlaceCodeToArray = value;
                 console.log(value[1])
+            },
+            handleHouseholdPlace1Change (value) {
+                this.householdPlaceCode1ToArray = value;
+                console.log(value[1])
+            },
+            handleHouseholdPlace2Change (value) {
+                this.householdPlaceCode2ToArray = value;
+                console.log(value[1])
+            },
+            arrayConfirm (value) {
+                if ("string" == typeof(value)) {
+                    return value.split(",");
+                } else {
+                    return value;
+                }
             }
         },
         computed: {
+            birthPlaceCodeToArray: {
+                get(){
+                    return this.arrayConfirm(this.info.brithPlaceCode);
+                },
+                set(value){
+                    this.info.brithPlaceCode = value;
+                }
+            },
+            grandPlaceCodeToArray: {
+                get(){
+                    return this.arrayConfirm(this.info.grandPlaceCode);
+                },
+                set(value){
+                    this.info.grandPlaceCode = value;
+                }
+            },
+            householdPlaceCodeToArray: {
+                get(){
+                    return this.arrayConfirm(this.info.householdPlaceCode);
+                },
+                set(value){
+                    this.info.householdPlaceCode = value;
+                }
+            },
+            householdPlaceCode1ToArray: {
+                get(){
+                    return this.arrayConfirm(this.info.householdPlaceCode1);
+                },
+                set(value){
+                    this.info.householdPlaceCode1 = value;
+                }
+            },
+            householdPlaceCode2ToArray: {
+                get(){
+                    return this.arrayConfirm(this.info.householdPlaceCode2);
+                },
+                set(value){
+                    this.info.householdPlaceCode2 = value;
+                }
+            },
             ...mapGetters([
                 'IDTypes',
                 'sexTypes',
@@ -570,22 +531,13 @@
 
 
 <style lang="less" scoped>
-    article {
-        text-align: center;
-        padding: 0 100px;
-        h2 {
-            text-align: center;
-            line-height: 80px;
-            color: #666;
-        }
+    .edit-wrapper {
         .block {
             width: 100%;
             display: block;
         }
-        .left-item {
-            text-align: left;
-        }
         .form {
+            // width: 400px;
         }
         .submit {
             width: 100px;

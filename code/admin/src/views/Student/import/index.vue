@@ -1,0 +1,368 @@
+<template>
+<article>
+    <!-- <div class="search">
+        <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="keyword" @keydown.enter.native="getStudentList"></el-input>
+        <el-button type="primary" icon="el-icon-search" :loading="loading" @click="getStudentList">搜索</el-button>
+    </div>
+    <div class="export">
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel">导出</el-button>
+    </div> -->
+    <el-upload
+        ref="upload"
+        action="/wm/upload/"
+        :show-file-list="false"
+        :on-change="readExcel"
+        :auto-upload="false">
+        <el-button
+            slot="trigger"
+            icon="el-icon-upload"
+            size="small"
+            type="primary">
+            上传文件
+        </el-button>
+    </el-upload>
+</article>
+</template>
+<script>
+    import { mapGetters } from 'vuex'
+    import { sexTypes, ethnics, nations, relations, nameDescDatas } from 'store/modules/classify'
+    import { CodeToText, TextToCode } from 'element-china-area-data'
+    import FileSaver from 'file-saver'
+    import XLSX from 'xlsx'
+    export default {
+        data() {
+            return {
+                loading: false,
+                //------学生个人基本信息
+                info: {
+                    //------学生个人基本信息
+                    studentName: '',                //1  姓名
+                    sexType: '',                    //2  性别
+                    birthDate: '',                  //3  出生日期    不显示  从身份证获取
+                    brithPlaceCode: [],             //4  出生地
+                    grandPlaceCode:[],              //5  籍贯
+                    ethnic: '01',                   //6  民族           默认汉族
+                    nation: 'CN',                   //7  国家地区        默认中国
+                    contactPhoneNumber: '',         //31 联系电话
+                    notMainland: '01',              //10 港澳台侨外       默认否
+                    IDType: '01',                     //8  身份证件类型     默认居民身份证
+                    studentID: '',                  //9  身份证号
+                    politicalStatus: '01',          //11  政治面貌    不显示  默认少先队员
+                    healthStatus: '01',             //12  健康状况    不显示  默认健康或良好
+                    //------学生个人辅助信息
+                    householdPlaceCode: [],         //17  户口所在地
+                    householdType: '',              //18  户口性质
+                    strongPoint: '',                //19  特长
+                    IDValidityPeriod: '',           //16  身份证有效期
+                    usedName: '',                   //15  曾用名
+                    //------学生学籍辅助信息
+                    nationalStudentNumber: '',      //20  全国学籍号
+                    inClassNum: '',                 //21  班内学号     默认空
+                    grade: '小学2019级',             //22  年级        默认
+                    classNum: '',                   //23  班级        默认空
+                    enterSchoolYearMonth: '201909', //24  入学年月     默认
+                    admissionMode: '01',            //25  入学方式    默认
+                    residentType: '01',             //26  就读方式    默认
+                    studentSource: '01',            //27  学生来源    默认
+                    //------学生个人联系方式
+                    address: '',                    //28  现住址
+                    contactAddress: '',             //29  现住址
+                    familyAddress: '',              //30  现住址    
+                    postalCode: '',                 //32  邮政编码
+                    //------学生个人扩展信息
+                    isOneChild: '',                 //35  是否独生子女
+                    hasPreschoolEducation: '',      //36  是否受过学前教育
+                    leftChildrenType: '01',         //37  是否留守儿童
+                    withEnterCities: '',            //38  是否进城务工随迁子女
+                    orphan: '02',                   //39  是否孤儿
+                    martyr: '02',                   //40  是否烈士或优抚子女
+                    mainstream: '01',               //41  随班就读
+                    disability: '01',               //42  残疾类型
+                    govBuySeat: '02',               //43  是否政府购买学位
+                    needHelp: '02',                 //44  是否需要申请资助
+                    enjoyHelp: '02',                //45  是否享受一补
+                    //------学生上下学交通方式
+                    distance: '',                   //46  上下学距离
+                    vehicle: '',                    //47  交通方式
+                    schoolbus: '02',                //48  是否需要校车
+                    //-------学生家庭成员或监护人信息一
+                    keeper1Name: '',                //49  监护人1姓名
+                    relation1: '01',                //50  监护人1关系
+                    relation1desc: '',              //51  监护人1关系说明
+                    keeper1ethnic: '',              //52  监护人1民族
+                    keeper1workplace: '',           //53  监护人1工作单位
+                    address1: '',                   //54  监护人1现住址
+                    householdPlaceCode1: [],        //55  监护人1户口所在地
+                    contact1PhoneNumber: '',        //56  监护人1联系电话
+                    keeper1: '01',                  //57  是否是监护人
+                    keeper1IDtype: '',              //58  监护人1身份证类型
+                    keeper1ID: '',                  //59  监护人1身份证号码
+                    keeper1position: '',            //60  监护人1职务
+                    //-------学生家庭成员或监护人信息二
+                    keeper2Name: '',                //61  监护人2姓名
+                    relation2: '02',                //62  监护人2关系
+                    relation2desc: '',              //63  监护人2关系说明
+                    keeper2ethnic: '',              //64  监护人2民族
+                    keeper2workplace: '',           //65  监护人2工作单位
+                    address2: '',                   //66  监护人2现住址
+                    householdPlaceCode2: [],        //67  监护人2户口所在地
+                    contact2PhoneNumber: '',        //68  监护人2联系电话
+                    keeper2: '01',                  //69  是否是监护人
+                    keeper2IDtype: '',              //70  监护人2身份证类型
+                    keeper2ID: '',                  //71  监护人2身份证号码
+                    keeper2position: '',            //72  监护人2职务
+
+                    //市学籍信息
+                    hasDoubleGirls: '02',            //    是否双女户
+                    cityStudentNumber: '',           //    市学籍
+
+                    isPre: '01',                     //    区分在校学生和未注册学籍的学生
+                },
+            }
+        },
+        mounted () {
+            this.getStudentList()
+        },
+
+        methods: {
+            readExcel(file) {
+                const fileReader = new FileReader();
+                fileReader.onload = (ev) => {
+                    // try {
+                        const data = ev.target.result;
+                        const workbook = XLSX.read(data, {
+                        type: 'binary'
+                        });
+                        // for (let sheet in workbook.Sheets) {
+                            const sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
+                            // console.log(sheet);
+                            // console.log(sheetArray);
+                            for (let studentInfo in sheetArray) {
+                                this.createStudentInfo(sheetArray[studentInfo]);
+                                break;
+                            }
+                        // }
+                    // } catch (e) {
+                    //     this.$message.warning('文件类型不正确！');
+                    //     return false;
+                    // }
+                };
+                fileReader.readAsBinaryString(file.raw);
+            },
+            createStudentInfo (data) {
+                console.log(data);
+                for (let index in data) {
+                    var result = nameDescDatas.filter(obj => {
+                        return obj.desc === index
+                    })
+                    if (result[0]) {
+                        console.log(result[0].name);
+                        // console.log(index);
+                        // console.log(data[index]);
+                        this.info[result[0].name] = this.anyFmt(index, data[index], result[0].data);
+                        // break;
+                    }
+                    
+                }
+                console.log(this.info);
+                try{
+                    // this.$store.dispatch('addStudent', stduentInfo);
+                    // this.loading = false
+                    // this.$router.push('/student/list')
+                }catch(e) {
+                    this.loading = false
+                }
+            },
+            anyFmt(label, value, data) {
+                switch (label) {
+                    case "sexType":
+                        return ("女" == value)?'02':'01';
+                    break;
+                    case "birthDate"://430181198410263456
+                        var idStr = value;
+                        return idStr.substring(6, 10)+"-"+idStr.substring(10, 12)+"-"+idStr.substring(12, 14);
+                    break;
+                    case "出生地":
+                        return value;//this.codeFmt(row.brithPlaceCode);
+                    break;
+                    case "籍贯":
+                        return value;//this.codeFmt(row.grandPlaceCode);
+                    break;
+                    case "ethnic":
+                        return ("汉族" == value)?'01':this.basicFmt(data, value);
+                    break;
+                    case "nation":
+                        return ("中国" == value)?'CN':this.nationFmt(nations, value);
+                    break;
+                    case "IDType":
+                        return ("居民身份证" == value)?'01':this.basicFmt(data, value);
+                    break;
+                    case "relation1":
+                        return this.basicFmt(data, value);
+                    break;
+                    case "成员1户口所在地":
+                        return value;//this.codeFmt(row.householdPlaceCode1);
+                    break;
+                    case "relation1":
+                        return this.basicFmt(data, value);
+                    break;
+                    case "成员2户口所在地":
+                        return value;//this.codeFmt(row.householdPlaceCode2);
+                    break;
+                    case "keeper1":
+                    case "keeper2":
+                    case "withEnterCities":
+                    case "isOneChild":
+                    case "hasPreschoolEducation":
+                    case "leftChildrenType":
+                    case "orphan":
+                    case "martyr":
+                    case "needHelp":
+                    case "enjoyHelp":
+                        return ("是" == value)?'01':'02';
+                    break;
+                    default:
+                        return value.replace(/\s+/g,"");
+                    break;
+                }
+            },
+            codeFmt(codeStr) {
+                var returnStr = "";
+                var codeArr = codeStr;
+                if ("string" == typeof(codeStr)) {
+                    codeArr = codeStr.split(",");
+                }
+                
+                for (let index = 0; index < codeArr.length; index++) {
+                    returnStr += CodeToText[codeArr[index]];
+                }
+                return returnStr;
+            },
+            basicFmt(classDatas, value) {
+                for (let index = 0; index < classDatas.length; index++) {
+                    const element = classDatas[index];
+                    if (element.name == value) {
+                        return element.id;
+                    }
+                }
+            },
+            nationFmt(classDatas, key) {
+                for (let index = 0; index < classDatas.length; index++) {
+                    const element = classDatas[index];
+                    if (element.code == key) {
+                        return element.cn;
+                    }
+                }
+            },
+            increment (index) {
+                return index+1+((this.pageindex-1)*this.pagesize)
+            },
+            close () {
+                this.editShow = false;
+                this.getStudentList()
+            },
+            handleSizeChange(val) {
+                // console.log(`每页 ${val} 条`);
+                this.pagesize = val;
+                this.getStudentList()
+            },
+            handleCurrentChange(val) {
+                // console.log(`当前页: ${val}`);
+                this.pageindex = val;
+                this.getStudentList()
+            },
+            async getStudentList () {
+                this.loading = true;
+                try {
+                    await this.$store.dispatch('getStudentList', {
+                        keyword: this.keyword,
+                        pageindex: this.pageindex,
+                        pagesize: this.pagesize
+                    })
+                    this.loading = false;
+                }catch(e) {
+                    this.loading = false;
+                }
+            },
+            del (scope) {
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                      confirmButtonText: '确定',
+                      cancelButtonText: '取消',
+                      type: 'warning',
+                      center: true
+                    }).then(async () => {
+                        try {
+                    await this.$store.dispatch('delStudent', scope.row._id)
+                    this.studentList.splice(scope.$index, 1)
+                }catch(e) {
+
+                }
+                      this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                      });
+                    }).catch(() => {
+                      this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                      });
+                    });
+                
+            },
+            edit (scope) {
+                console.log(scope.row)
+                this.editShow = true;
+                this.studentInfo = scope.row;
+                // scope.row.releaseTime = new Date(scope.row.releaseTime)
+            },
+            filterTag(value, row) {
+                return row.type.some( v => v === value)
+            },
+            exportExcel () {
+                /* generate workbook object from table */
+                var wb = XLSX.utils.table_to_book(document.querySelector('#student-list'));
+                var ws = wb.Sheets.Sheet1;
+                var cell = ws[XLSX.utils.encode_cell({r:1,c:9})];
+                if(cell && cell.t == 'n') {
+                    cell.t = "s";
+                }
+                
+                /* get binary string as output */
+                var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+                try {
+                    FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'sheetjs.xlsx')
+                } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+                return wbout
+            },
+        },
+        computed: {
+            ...mapGetters([
+                'studentList',
+                'studentTotal',
+                'sexTypes',
+                'ethnics',
+                'nations',
+                'relations',
+            ])
+        }
+    }
+</script>
+
+<style lang="less" scoped>
+    article {
+        padding: 20px;
+        .search {
+            padding-bottom: 20px;
+            .el-input {
+                width: 300px;
+            }
+        }
+        .pagination {
+            text-align: right;
+            padding: 20px 0;
+        }
+        .tag {
+            margin: 0 10px;
+        }
+    }
+</style>

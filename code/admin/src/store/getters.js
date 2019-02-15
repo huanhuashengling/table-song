@@ -24,6 +24,7 @@ const getters = {
     admissionModes: state => state.student.admissionModes,
     bloodTypes: state => state.student.bloodTypes,
     studentList: state => state.student.list,
-    studentTotal: state => state.student.total
+    studentTotal: state => state.student.total,
+    nameDescDatas: state => state.student.nameDescDatas,
 }
 export default getters
