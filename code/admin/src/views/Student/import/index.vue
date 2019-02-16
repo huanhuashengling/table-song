@@ -25,8 +25,8 @@
 </template>
 <script>
     import { mapGetters } from 'vuex'
-    import { sexTypes, ethnics, nations, relations, nameDescDatas } from 'store/modules/classify'
     import { CodeToText, TextToCode } from 'element-china-area-data'
+    import { sexTypes, ethnics, nations, relations } from 'store/modules/classify'
     import FileSaver from 'file-saver'
     import XLSX from 'xlsx'
     export default {
@@ -137,9 +137,9 @@
                             const sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
                             // console.log(sheet);
                             // console.log(sheetArray);
-                            for (let studentInfo in sheetArray) {
-                                this.createStudentInfo(sheetArray[studentInfo]);
-                                break;
+                            for (let index in sheetArray) {
+                                this.createStudentInfo(sheetArray[index]);
+                                // break;
                             }
                         // }
                     // } catch (e) {
@@ -150,30 +150,36 @@
                 fileReader.readAsBinaryString(file.raw);
             },
             createStudentInfo (data) {
-                console.log(data);
+                // console.log(data);
+                let tInfo = JSON.parse(JSON.stringify(this.info));
+
                 for (let index in data) {
-                    var result = nameDescDatas.filter(obj => {
+                    var result = this.nameDescDatas.filter(obj => {
                         return obj.desc === index
                     })
                     if (result[0]) {
-                        console.log(result[0].name);
+                        // console.log(result[0].name);
                         // console.log(index);
                         // console.log(data[index]);
-                        this.info[result[0].name] = this.anyFmt(index, data[index], result[0].data);
-                        // break;
+                        tInfo[result[0].name] = this.anyFmt(result[0].name, data[index], result[0].data);
+                        // if ("leftChildrenType" == result[0].name)
+                        // {
+                        //     break;
+                        // }
                     }
                     
                 }
-                console.log(this.info);
+                // console.log(tInfo);
                 try{
-                    // this.$store.dispatch('addStudent', stduentInfo);
-                    // this.loading = false
-                    // this.$router.push('/student/list')
+                    this.$store.dispatch('addStudent', tInfo);
+                    this.loading = false
+                    this.$router.push('/student/list')
                 }catch(e) {
                     this.loading = false
                 }
             },
             anyFmt(label, value, data) {
+                // console.log(label+"    "+value+"    "+data);
                 switch (label) {
                     case "sexType":
                         return ("女" == value)?'02':'01';
@@ -182,33 +188,43 @@
                         var idStr = value;
                         return idStr.substring(6, 10)+"-"+idStr.substring(10, 12)+"-"+idStr.substring(12, 14);
                     break;
-                    case "出生地":
-                        return value;//this.codeFmt(row.brithPlaceCode);
-                    break;
-                    case "籍贯":
-                        return value;//this.codeFmt(row.grandPlaceCode);
-                    break;
+                    // case "brithPlaceCode":
+                    //     return this.codeFmt(value);
+                    // break;
+                    // case "grandPlaceCode":
+                    //     return this.codeFmt(value);
+                    // break;
                     case "ethnic":
-                        return ("汉族" == value)?'01':this.basicFmt(data, value);
+                        return ("汉族" == value)?'01':this.basicFmt(this[data], value);
                     break;
                     case "nation":
                         return ("中国" == value)?'CN':this.nationFmt(nations, value);
                     break;
                     case "IDType":
-                        return ("居民身份证" == value)?'01':this.basicFmt(data, value);
-                    break;
+                    case "politicalStatus":
+                    case "householdType":
+                    case "healthStatus":
+                    case "admissionMode":
+                    case "residentType":
+                    case "studentSource":
+                    case "mainstream":
+                    case "notMainland":
+                    case "disability":
+                    case "vehicle":
                     case "relation1":
-                        return this.basicFmt(data, value);
+                    case "keeper1ethnic":
+                    case "keeper1IDtype":
+                    case "relation2":
+                    case "keeper2ethnic":
+                    case "keeper2IDtype":
+                        return this.basicFmt(this[data], value);
                     break;
-                    case "成员1户口所在地":
-                        return value;//this.codeFmt(row.householdPlaceCode1);
-                    break;
-                    case "relation1":
-                        return this.basicFmt(data, value);
-                    break;
-                    case "成员2户口所在地":
-                        return value;//this.codeFmt(row.householdPlaceCode2);
-                    break;
+                    // case "householdPlaceCode1":
+                    //     return this.codeFmt(value);
+                    // break;
+                    // case "householdPlaceCode2":
+                    //     return this.codeFmt(value);
+                    // break;
                     case "keeper1":
                     case "keeper2":
                     case "withEnterCities":
@@ -222,37 +238,42 @@
                         return ("是" == value)?'01':'02';
                     break;
                     default:
+                    if(typeof value=="string"){
                         return value.replace(/\s+/g,"");
+                    } else {
+                        return value;
+                    }
                     break;
                 }
             },
-            codeFmt(codeStr) {
+            codeFmt(textStr) {
+                return textStr;
+                // console.log("reach this"+ textStr);
                 var returnStr = "";
-                var codeArr = codeStr;
-                if ("string" == typeof(codeStr)) {
-                    codeArr = codeStr.split(",");
-                }
+                // var codeArr = textStr;
+                // if ("string" == typeof(codeStr)) {
+                    // codeArr = codeStr.split(",");
+                // }
                 
-                for (let index = 0; index < codeArr.length; index++) {
-                    returnStr += CodeToText[codeArr[index]];
-                }
+                returnStr = TextToCode[textStr];
+                console.log("reach this"+ returnStr);
+
                 return returnStr;
             },
             basicFmt(classDatas, value) {
-                for (let index = 0; index < classDatas.length; index++) {
-                    const element = classDatas[index];
-                    if (element.name == value) {
-                        return element.id;
-                    }
-                }
+                // console.log(classDatas);
+                // console.log(value);
+                var result = classDatas.filter(obj => {
+                        return obj.name === value
+                    })
+                    // console.log(result[0]);
+                return result[0].id;
             },
             nationFmt(classDatas, key) {
-                for (let index = 0; index < classDatas.length; index++) {
-                    const element = classDatas[index];
-                    if (element.code == key) {
-                        return element.cn;
-                    }
-                }
+                var result = classDatas.filter(obj => {
+                        return obj.cn === key
+                    })
+                return result.code;
             },
             increment (index) {
                 return index+1+((this.pageindex-1)*this.pagesize)
@@ -337,12 +358,27 @@
         },
         computed: {
             ...mapGetters([
-                'studentList',
-                'studentTotal',
+                'IDTypes',
                 'sexTypes',
                 'ethnics',
                 'nations',
+                'sources',
+                'healthStatuses',
+                'ethnics',
+                'studentSources',
+                'householdTypes',
+                'politicalStatuses',
+                'leftChildrenTypes',
+                'notMainlands', 
+                'admissionModes', 
+                'switchStates',
+                'bloodTypes',
+                'residentTypes',
+                'vehicles',
                 'relations',
+                'disabilities', 
+                'mainstreams',
+                'nameDescDatas',
             ])
         }
     }

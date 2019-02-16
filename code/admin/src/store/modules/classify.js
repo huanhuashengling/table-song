@@ -47,9 +47,10 @@ export const switchStates = [
 ]
 //留守儿童
 export const leftChildrenTypes = [ 
-    { id: "01", name: '非留守儿童' },
-    { id: "02", name: '单亲留守儿童' },
-    { id: "03", name: '双亲留守儿童' },
+    { id: "01", name: '否' },
+    { id: "02", name: '是' },
+    { id: "03", name: '单亲留守儿童' },
+    { id: "04", name: '双亲留守儿童' },
 ]
 //非随班就读
 export const mainstreams = [
@@ -93,7 +94,8 @@ export const notMainlands = [
     { id: "12", name: '归国留学人员' },
     { id: "13", name: '非华裔中国人' },
     { id: "14", name: '外籍华裔人' },
-    { id: "15", name: '其他' }
+    { id: "15", name: '其他' },
+    { id: "16", name: '外国人' },
 ]
 //入学方式
 export const admissionModes = [ 
