@@ -1,48 +1,15 @@
 <template>
 <article>
-    <div class="search">
-        <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="keyword" @keydown.enter.native="getStudentList"></el-input>
-        <el-button type="primary" icon="el-icon-search" :loading="loading" @click="getStudentList">搜索</el-button>
-    </div>
+    <ul>
+  <template v-for="gradeNum in gradeArr">
+    <template v-for="classNum in classArr">
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel2(gradeNum, classNum)">导出{{ gradeNum }}级{{ classNum }}班</el-button>
+    </template>
+  </template>
+</ul>
     <div class="export">
         <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel">导出</el-button>
     </div>
-    <el-table ref="multipleTable" id="student-list" :data="studentList" tooltip-effect="dark" stripe border>
-        <el-table-column show-overflow-tooltip type="index" width="55" align="center" header-align="center" :index="increment"></el-table-column>
-        <el-table-column show-overflow-tooltip v-if="!item.hidden && !item.filters && !item.format" v-for="(item, index) in headerOptions" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign || 'center'" :align="item.align || 'center'" :sortable="item.sort || false"  :min-width="item.minWidth || 150">
-            <template slot-scope="scope">
-                <div>{{scope.row[scope.column.property] || '无'}}</div>
-            </template>
-        </el-table-column>
-        <el-table-column show-overflow-tooltip v-else-if="!item.hidden && !item.filters && item.format" :key="index" :label="item.label" :formatter="anyFmt" :prop="item.prop" :header-align="item.headerAlign || 'center'" :align="item.align || 'center'" :sortable="item.sort || false"  :min-width="item.minWidth || 150">
-        </el-table-column>
-        <el-table-column show-overflow-tooltip v-else-if="!item.hidden && item.filters" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign || 'center'" :align="item.align || 'center'" :sortable="item.sort" :filters="item.filters" :filter-method="filterTag"  :min-width="item.minWidth || 200">
-            <template slot-scope="scope">
-                <el-tag
-                    class="tag"
-                    type="primary"
-                    close-transition 
-                    v-for="(tag, index) in scope.row.type" :key="index">{{tag}}</el-tag>
-            </template>
-        </el-table-column>
-        <el-table-column label="操作" header-align="center" align="center" width="250">
-            <template slot-scope="scope">
-            <el-button size="mini" @click="edit(scope)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="del(scope)">删除</el-button>
-            </template>
-        </el-table-column>
-    </el-table>
-    <el-pagination
-      class="pagination"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="pageindex"
-      :page-sizes="size_scoped"
-      :page-size="pagesize"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="studentTotal">
-    </el-pagination>
-    <EditComponent v-if="editShow" :info="studentInfo" :data=12 @close="close"></EditComponent>
 
 </article>
 </template>
@@ -59,12 +26,14 @@
         },
         data() {
             return {
+                gradeArr: ['2018', '2017', '2016', '2015', '2014', '2013'],
+                classArr: ['1', '2', '3', '4'],
                 keyword: '',
                 editShow: false,
                 studentInfo: {},
                 loading: false,
                 pageindex: 1,
-                pagesize: 10,
+                pagesize: 55,
                 size_scoped: [10, 20, 30, 40],
                 headerOptions: [
                 //------学生个人基本信息
@@ -111,7 +80,7 @@
             }
         },
         mounted () {
-            this.getStudentList()
+            // this.getStudentList()
         },
 
         methods: {
@@ -248,7 +217,7 @@
             filterTag(value, row) {
                 return row.type.some( v => v === value)
             },
-            exportExcel () {
+            exportExcel1 () {
                 /* generate workbook object from table */
                 var wb = XLSX.utils.table_to_book(document.querySelector('#student-list'));
                 var ws = wb.Sheets.Sheet1;
@@ -263,6 +232,65 @@
                     FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'sheetjs.xlsx')
                 } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
                 return wbout
+            },
+            exportExcel () {
+                let gradeArr = ['2018', '2017', '2016', '2015', '2014', '2013'];
+                let classArr = ['1', '2', '3', '4'];
+                //keyword: '小学2017级4班',
+                console.log("bs");
+                for (let gradeNum in gradeArr) {
+                    for (let classNum in classArr) {
+                        this.keyword = "小学" + gradeArr[gradeNum] + "级" + classArr[classNum] + "班";
+                        console.log(this.keyword);
+
+                        this.getStudentList();
+                        console.log(this.studentList);
+                    }
+                }
+                
+                // var data = this.studentList;
+                // // /* 需要导出的JSON数据 */
+                // // var data = [
+                // //     {"name":"John", "city": "Seattle"},
+                // //     {"name":"Mike", "city": "Los Angeles"},
+                // //     {"name":"Zach", "city": "New York"}
+                // // ];
+
+                // /* 创建worksheet */
+                // var ws = XLSX.utils.json_to_sheet(data);
+
+                // /* 新建空workbook，然后加入worksheet */
+                // var wb = XLSX.utils.book_new();
+                // XLSX.utils.book_append_sheet(wb, ws, "People");
+
+                // /* 生成xlsx文件 */
+                // XLSX.writeFile(wb, "sheetjs.xlsx");
+            },
+            exportExcel2 (gradeNum, classNum) {
+                //keyword: '小学2017级4班',
+                this.keyword = "小学" + gradeNum + "级" + classNum + "班";
+                console.log(this.keyword);
+
+                this.getStudentList();
+                console.log(this.studentList);
+                
+                var data = this.studentList;
+                // /* 需要导出的JSON数据 */
+                // var data = [
+                //     {"name":"John", "city": "Seattle"},
+                //     {"name":"Mike", "city": "Los Angeles"},
+                //     {"name":"Zach", "city": "New York"}
+                // ];
+
+                /* 创建worksheet */
+                var ws = XLSX.utils.json_to_sheet(data);
+
+                /* 新建空workbook，然后加入worksheet */
+                var wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "People");
+
+                /* 生成xlsx文件 */
+                XLSX.writeFile(wb, "sheetjs.xlsx");
             },
         },
         computed: {
