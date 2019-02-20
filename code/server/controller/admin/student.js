@@ -37,7 +37,23 @@ module.exports = {
             console.log(e)
             ctx.sendError(e)
         }
-        
+    },
+
+    async findOne (ctx, next) {
+        console.log('----------------获取单个学生信息 student/findOne-----------------------');
+        let paramsData = ctx.request.query;
+        // console.log(paramsData)
+        try {
+            let data = await ctx.findOne(studentModel, {studentName: paramsData.studentName})
+            if (data) {
+                ctx.send(data)
+            }else{
+                ctx.sendError('没有这个姓名的学生!')
+            }
+        }catch (e){
+            console.log(e)
+            ctx.sendError(e)
+        }
     },
 
     async add (ctx, next) {

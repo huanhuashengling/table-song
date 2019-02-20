@@ -1,3 +1,19 @@
+//年级
+export const gradeDescs = [
+    { id: "01",  enterYear: '2018', label:"一" },
+    { id: "02",  enterYear: '2017', label:"二" },
+    { id: "03",  enterYear: '2016', label:"三" },
+    { id: "04",  enterYear: '2015', label:"四" },
+    { id: "05",  enterYear: '2014', label:"五" },
+    { id: "06",  enterYear: '2013', label:"六" },
+]
+//班级
+export const classDescs = [
+    { id: "01",  bigLabel: '甲', label:"1" },
+    { id: "02",  bigLabel: '乙', label:"2" },
+    { id: "03",  bigLabel: '丙', label:"3" },
+    { id: "04",  bigLabel: '丁', label:"4" },
+]
 //健康状况
 export const healthStatuses = [
     { id: "01",  name: '健康或良好' },
@@ -282,7 +298,11 @@ export const nameDescDatas = [
     
     //------市学籍信息
     {"desc": "是否双女户", "name": "hasDoubleGirls", "data":"", },             
-    {"desc": "市学籍", "name": "cityStudentNumber", "data":"", },          
+    {"desc": "市学籍", "name": "cityStudentNumber", "data":"", },   
+
+    {"desc": "学校标识码", "name": "schoolCode", "data":"", },   
+    {"desc": "所在学校", "name": "schoolName", "data":"", },   
+
 ]
 
 //所有的国籍

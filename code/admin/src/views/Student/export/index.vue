@@ -1,22 +1,22 @@
 <template>
 <article>
     <ul>
-  <template v-for="gradeNum in gradeArr">
-    <template v-for="classNum in classArr">
-        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel2(gradeNum, classNum)">导出{{ gradeNum }}级{{ classNum }}班</el-button>
+  <template v-for="gradeItem in gradeDescs">
+    <template v-for="classItem in classDescs">
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel(gradeItem, classItem)">{{ gradeItem.label }}{{ classItem.bigLabel }}班花名册导出</el-button>
     </template>
   </template>
 </ul>
-    <div class="export">
+    <!-- <div class="export">
         <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel">导出</el-button>
-    </div>
+    </div> -->
 
 </article>
 </template>
 <script>
     import { mapGetters } from 'vuex'
     import EditComponent from '../edit/index'
-    import { sexTypes, ethnics, nations, relations } from 'store/modules/classify'
+    import { sexTypes, ethnics, nations, relations, nameDescDatas } from 'store/modules/classify'
     import { CodeToText, TextToCode } from 'element-china-area-data'
     import FileSaver from 'file-saver'
     import XLSX from 'xlsx'
@@ -101,79 +101,113 @@
                 this.pageindex = val;
                 this.getStudentList()
             },
-            codeFmt(codeStr) {
-                var returnStr = "";
-                var codeArr = codeStr;
-                if ("string" == typeof(codeStr)) {
-                    codeArr = codeStr.split(",");
-                }
-                
-                for (let index = 0; index < codeArr.length; index++) {
-                    returnStr += CodeToText[codeArr[index]];
-                }
-                return returnStr;
-            },
-            anyFmt(row, column) {
-                switch (column.label) {
-                    case "性别":
-                        return ("01" == row.sexType)?'男':'女';
+            anyFmt(label, value, data) {
+                console.log(label+"    "+value+"    "+data);
+                switch (label) {
+                    case "sexType":
+                        return ("01" == value)?'男':'女';
                     break;
-                    case "出生日期"://430181198410263456
-                        var idStr = row.studentID;
+                    case "birthDate"://430181198410263456
+                        var idStr = value;
                         return idStr.substring(6, 10)+"-"+idStr.substring(10, 12)+"-"+idStr.substring(12, 14);
                     break;
-                    case "出生地":
-                        return this.codeFmt(row.brithPlaceCode);
+                    // case "brithPlaceCode":
+                    //     return this.codeFmt(value);
+                    // break;
+                    // case "grandPlaceCode":
+                    //     return this.codeFmt(value);
+                    // break;
+                    case "ethnic":
+                        return ("01" == value)?'汉族':this.basicFmt(this[data], value);
                     break;
-                    case "籍贯":
-                        return this.codeFmt(row.grandPlaceCode);
+                    case "nation":
+                        return ("CN" == value)?'中国':this.nationFmt(nations, value);
                     break;
-                    case "民族":
-                        return ("01" == row.ethnic)?'汉族':this.basicFmt(ethnics, row.ethnic);
+                    case "IDType":
+                    case "politicalStatus":
+                    case "householdType":
+                    case "healthStatus":
+                    case "admissionMode":
+                    case "residentType":
+                    case "studentSource":
+                    case "mainstream":
+                    case "notMainland":
+                    case "disability":
+                    case "vehicle":
+                    case "relation1":
+                    case "keeper1ethnic":
+                    case "keeper1IDtype":
+                    case "relation2":
+                    case "keeper2ethnic":
+                    case "keeper2IDtype":
+                        return this.basicFmt(this[data], value);
                     break;
-                    case "国家地区":
-                        return ("CN" == row.nation)?'中国':this.nationFmt(nations, row.nation);
+                    // case "householdPlaceCode1":
+                    //     return this.codeFmt(value);
+                    // break;
+                    // case "householdPlaceCode2":
+                    //     return this.codeFmt(value);
+                    // break;
+                    case "keeper1":
+                    case "keeper2":
+                    case "withEnterCities":
+                    case "isOneChild":
+                    case "hasPreschoolEducation":
+                    case "leftChildrenType":
+                    case "orphan":
+                    case "martyr":
+                    case "needHelp":
+                    case "enjoyHelp":
+                        return ("01" == value)?'是':'否';
                     break;
-                    case "成员1关系":
-                        return this.basicFmt(relations, row.relation1);
-                    break;
-                    case "成员1户口所在地":
-                        return this.codeFmt(row.householdPlaceCode1);
-                    break;
-                    case "成员2关系":
-                        return this.basicFmt(relations, row.relation2);
-                    break;
-                    case "成员2户口所在地":
-                        return this.codeFmt(row.householdPlaceCode2);
-                    break;
-                    case "是否监护人1":
-                        return ("01" == row.keeper1)?'是':'否';
-                    break;
-                    case "是否监护人2":
-                        return ("01" == row.keeper2)?'是':'否';
+                    default:
+                    if(typeof value=="string"){
+                        return value.replace(/\s+/g,"");
+                    } else {
+                        return value;
+                    }
                     break;
                 }
             },
-            basicFmt(classDatas, key) {
-                for (let index = 0; index < classDatas.length; index++) {
-                    const element = classDatas[index];
-                    if (element.id == key) {
-                        return element.name;
-                    }
+            codeFmt(textStr) {
+                return textStr;
+                // console.log("reach this"+ textStr);
+                var returnStr = "";
+                // var codeArr = textStr;
+                // if ("string" == typeof(codeStr)) {
+                    // codeArr = codeStr.split(",");
+                // }
+                
+                returnStr = TextToCode[textStr];
+                console.log("reach this"+ returnStr);
+
+                return returnStr;
+            },
+            basicFmt(classDatas, value) {
+                // console.log(classDatas);
+                // console.log(value);
+                var result = classDatas.filter(obj => {
+                        return obj.id === value
+                    })
+                    // console.log(result[0]);
+                if (result[0]) {
+                    return result[0].name;
+                } else {
+                    return "";
                 }
             },
             nationFmt(classDatas, key) {
-                for (let index = 0; index < classDatas.length; index++) {
-                    const element = classDatas[index];
-                    if (element.code == key) {
-                        return element.cn;
-                    }
-                }
+                var result = classDatas.filter(obj => {
+                        return obj.code === key
+                    })
+                return result[0].cn;
             },
             async getStudentList () {
                 this.loading = true;
+                console.log("export index getStudentList  "+this.keyword);
                 try {
                     await this.$store.dispatch('getStudentList', {
+                        // keyword: "小学2015级4班",
                         keyword: this.keyword,
                         pageindex: this.pageindex,
                         pagesize: this.pagesize
@@ -233,48 +267,23 @@
                 } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
                 return wbout
             },
-            exportExcel () {
-                let gradeArr = ['2018', '2017', '2016', '2015', '2014', '2013'];
-                let classArr = ['1', '2', '3', '4'];
+            exportExcel (gradeItem, classItem) {
                 //keyword: '小学2017级4班',
-                console.log("bs");
-                for (let gradeNum in gradeArr) {
-                    for (let classNum in classArr) {
-                        this.keyword = "小学" + gradeArr[gradeNum] + "级" + classArr[classNum] + "班";
-                        console.log(this.keyword);
+                var filename = gradeItem.label + "" + classItem.bigLabel+"班";
 
-                        this.getStudentList();
-                        console.log(this.studentList);
-                    }
-                }
-                
-                // var data = this.studentList;
-                // // /* 需要导出的JSON数据 */
-                // // var data = [
-                // //     {"name":"John", "city": "Seattle"},
-                // //     {"name":"Mike", "city": "Los Angeles"},
-                // //     {"name":"Zach", "city": "New York"}
-                // // ];
-
-                // /* 创建worksheet */
-                // var ws = XLSX.utils.json_to_sheet(data);
-
-                // /* 新建空workbook，然后加入worksheet */
-                // var wb = XLSX.utils.book_new();
-                // XLSX.utils.book_append_sheet(wb, ws, "People");
-
-                // /* 生成xlsx文件 */
-                // XLSX.writeFile(wb, "sheetjs.xlsx");
-            },
-            exportExcel2 (gradeNum, classNum) {
-                //keyword: '小学2017级4班',
-                this.keyword = "小学" + gradeNum + "级" + classNum + "班";
+                this.keyword = "小学" + gradeItem.enterYear + "级" + classItem.label + "班";
                 console.log(this.keyword);
-
+ 
                 this.getStudentList();
-                console.log(this.studentList);
-                
-                var data = this.studentList;
+                var tInfoArr = new Array();
+                for (let index in this.studentList) {
+                    tInfoArr.push(this.fmtOneStudent(this.studentList[index], filename));
+                    // console.log(tInfoArr);
+
+                    // break;
+                }
+                console.log("export index 285  "+tInfoArr);
+                var data = tInfoArr;
                 // /* 需要导出的JSON数据 */
                 // var data = [
                 //     {"name":"John", "city": "Seattle"},
@@ -287,20 +296,83 @@
 
                 /* 新建空workbook，然后加入worksheet */
                 var wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "People");
+                XLSX.utils.book_append_sheet(wb, ws, filename);
 
                 /* 生成xlsx文件 */
-                XLSX.writeFile(wb, "sheetjs.xlsx");
+                XLSX.writeFile(wb, filename+".xlsx");
+            },
+            fmtOneStudent (studentInfo, filename) {
+                //班级 姓名 家长姓名 联系方式  现住址
+                // let tInfo = JSON.parse(JSON.stringify(studentInfo));
+                let tInfo = new Array();
+                for (let index in studentInfo) {
+                    var result = this.nameDescDatas.filter(obj => {
+                        return obj.name === index
+                    })
+                    if (result[0]) {
+                        tInfo["班级"] = filename;
+
+                        if (result[0].name == "studentName") {
+                            // console.log(result[0].name);
+                            // console.log(index);
+                            // console.log(studentInfo[index]);
+                            tInfo[result[0].desc] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
+                            // break; 
+                            // if ("leftChildrenType" == result[0].name)
+                            // {
+                            //     break;
+                            // }
+                        } else if (result[0].name == "sexType") {
+                            tInfo["性别"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
+                        } else if (result[0].name == "keeper1Name") {
+                            tInfo["父亲姓名"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
+                        } else if (result[0].name == "keeper2Name") {
+                            tInfo["母亲姓名"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
+                        } else if (result[0].name == "address") {
+                            tInfo["现住址"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
+                        } else if (result[0].name == "contactPhoneNumber") {
+                            tInfo["联系电话"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
+                        } else if (result[0].name == "contact1PhoneNumber") {
+                            tInfo["父亲联系电话"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
+                        } else if (result[0].name == "contact2PhoneNumber") {
+                            tInfo["母亲联系电话"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
+                        }
+
+                    }
+                }
+                // console.log(tInfo);
+
+                return tInfo;
             },
         },
         computed: {
             ...mapGetters([
                 'studentList',
                 'studentTotal',
+                'gradeDescs',
+                'classDescs',
+                'nameDescDatas',
+                'IDTypes',
                 'sexTypes',
                 'ethnics',
                 'nations',
+                'sources',
+                'healthStatuses',
+                'ethnics',
+                'studentSources',
+                'householdTypes',
+                'politicalStatuses',
+                'leftChildrenTypes',
+                'notMainlands', 
+                'admissionModes', 
+                'switchStates',
+                'bloodTypes',
+                'residentTypes',
+                'vehicles',
                 'relations',
+                'disabilities', 
+                'mainstreams',
+                'nameDescDatas',
             ])
         }
     }

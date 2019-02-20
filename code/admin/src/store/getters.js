@@ -25,6 +25,9 @@ const getters = {
     bloodTypes: state => state.student.bloodTypes,
     studentList: state => state.student.list,
     studentTotal: state => state.student.total,
+    oneStudent: state => state.student.oneStudent,
     nameDescDatas: state => state.student.nameDescDatas,
+    gradeDescs: state => state.student.gradeDescs,
+    classDescs: state => state.student.classDescs,
 }
 export default getters

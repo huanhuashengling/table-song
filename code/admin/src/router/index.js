@@ -56,6 +56,7 @@ export const asyncRouterMap = [
             { path: 'list', component: _import_('Student/list/index'), name: '在校学籍列表' },
             { path: 'import', component: _import_('Student/import/index'), name: '在校学籍导入' },
             { path: 'export', component: _import_('Student/export/index'), name: '在校学籍导出' },
+            { path: 'card', component: _import_('Student/card/index'), name: '打印学籍卡片' },
         ]
     }
 ]

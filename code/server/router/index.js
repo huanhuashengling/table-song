@@ -17,6 +17,7 @@ export default app => {
 
     // 文章请求
     router.get('/admin_demo_api/student/list', app.admin.student.list)
+    router.get('/admin_demo_api/student/findOne', app.admin.student.findOne)
     router.post('/admin_demo_api/student/add', app.admin.student.add)
     router.post('/admin_demo_api/student/update', app.admin.student.update)
     router.get('/admin_demo_api/student/del', app.admin.student.del)

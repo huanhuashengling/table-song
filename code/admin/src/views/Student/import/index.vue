@@ -273,7 +273,7 @@
                 var result = classDatas.filter(obj => {
                         return obj.cn === key
                     })
-                return result.code;
+                return result[0].code;
             },
             increment (index) {
                 return index+1+((this.pageindex-1)*this.pagesize)

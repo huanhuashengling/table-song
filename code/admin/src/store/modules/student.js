@@ -1,7 +1,7 @@
 import axios from 'src/utils/fetch'
 import { IDTypes, sexTypes, ethnics, nations, healthStatuses, householdTypes, politicalStatuses, switchStates} from './classify'
 import { studentSources, notMainlands, admissionModes, bloodTypes, residentTypes, leftChildrenTypes, vehicles} from './classify'
-import { relations, disabilities, mainstreams, nameDescDatas } from './classify'
+import { relations, disabilities, mainstreams, nameDescDatas, gradeDescs, classDescs } from './classify'
 
 const music = {
 	state: {
@@ -24,13 +24,20 @@ const music = {
 		mainstreams,
 		bloodTypes,
 		nameDescDatas,
+		gradeDescs,
+		classDescs,
 		list: [],
+		oneStudent: {},
 		total: 0
 	},
 	mutations: {
 		STUDENTLIST (state, data) {
 			state.list = data.data.list;
 			state.total = data.data.total;
+		},
+		ONESTUDENT (state, data) {
+			console.log(data.data)
+			state.oneStudent = data.data;
 		}
 	},
 	actions: {
@@ -45,11 +52,27 @@ const music = {
 			})
 		},
 
+		findOneStudent ({commit}, params) {
+			console.log("findOneStudent "+params);
+			return new Promise( (resolve, reject) => {
+				axios.get('student/findOne', params)
+					.then( res => {
+						commit('ONESTUDENT', res)
+						// console.log(res.data)
+						resolve(res)
+					}).catch( err => {
+						reject(err)
+					})
+			})
+		},
+
 		getStudentList ({commit}, params) {
+			console.log(params);
 			return new Promise( (resolve, reject) => {
 				axios.get('student/list', params)
 					.then( res => {
 						commit('STUDENTLIST', res)
+						console.log("line 74  "+res)
 						resolve(res)
 					}).catch( err => {
 						reject(err)
