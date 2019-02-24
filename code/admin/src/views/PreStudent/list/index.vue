@@ -62,6 +62,8 @@
                 keyword: '',
                 editShow: false,
                 studentInfo: {},
+                conditions: {},
+                fields: {},
                 loading: false,
                 pageindex: 1,
                 pagesize: 10,
@@ -206,6 +208,8 @@
                 try {
                     await this.$store.dispatch('getStudentList', {
                         keyword: this.keyword,
+                        conditions: this.exportStudentListFields[5].conditions,
+                        fields: this.exportStudentListFields[5].fields,
                         pageindex: this.pageindex,
                         pagesize: this.pagesize
                     })
@@ -273,6 +277,7 @@
                 'ethnics',
                 'nations',
                 'relations',
+                'exportStudentListFields',
             ])
         }
     }

@@ -1,12 +1,47 @@
 <template>
 <article>
-    <ul>
-  <template v-for="gradeItem in gradeDescs">
+    <el-form :model="info" :rules="rules" ref="form" label-width="110px" class="form">
+        <el-row :gutter="20">
+            <el-col :span="24">
+                <el-form-item label="导出列集合" prop="exportField">
+                    <el-radio-group v-model="exportField" @change="changeExportField">
+                    <template v-for="item in exportStudentListFields">
+                        <el-tooltip class="item" effect="dark" :content="buildTooltipContent(item.fields)" placement="bottom-start">
+                            <el-radio-button :label="item.id">{{item.name}}</el-radio-button>
+                        </el-tooltip>
+                    </template>
+                    </el-radio-group>
+
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="导出范围" prop="exportRange">
+                    <el-radio-group v-model="exportRange" @change="changeExportRange">
+                        <el-radio-button label="school">全校</el-radio-button>
+                        <el-radio-button label="grade">分年级</el-radio-button>
+                        <el-radio-button label="class">分班</el-radio-button>
+                    </el-radio-group>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="操作" prop="exportRange">
+                    <el-button type="primary" icon="el-icon-document" :loading="loading" @click="renderOneStudentCard">输出花名册</el-button>
+                    <el-button type="primary" icon="el-icon-printer" :loading="loading" @click="vuePrint">打印</el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
+  <template v-if="showAll">
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportSchool()">全校花名册导出</el-button>
+  </template>
+  <template v-if="showGrade" v-for="gradeItem in gradeDescs">
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportGrade(gradeItem)">{{ gradeItem.label }}年级花名册导出</el-button>
+  </template>
+  <template v-if="showClass" v-for="gradeItem in gradeDescs">
     <template v-for="classItem in classDescs">
-        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel(gradeItem, classItem)">{{ gradeItem.label }}{{ classItem.bigLabel }}班花名册导出</el-button>
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportClass(gradeItem, classItem)">{{ gradeItem.label }}{{ classItem.bigLabel }}班花名册导出</el-button>
     </template>
   </template>
-</ul>
     <!-- <div class="export">
         <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel">导出</el-button>
     </div> -->
@@ -15,21 +50,31 @@
 </template>
 <script>
     import { mapGetters } from 'vuex'
-    import EditComponent from '../edit/index'
     import { sexTypes, ethnics, nations, relations, nameDescDatas } from 'store/modules/classify'
     import { CodeToText, TextToCode } from 'element-china-area-data'
     import FileSaver from 'file-saver'
     import XLSX from 'xlsx'
     export default {
-        components: {
-            EditComponent
-        },
         data() {
             return {
+                info: {
+                    studentName: '刘熙梓',                //1  姓名
+                    grade: '',             //22  年级        默认
+                    classNum: '',                   //23  班级        默认空
+                },
+                showAll: false,
+                showGrade: false,
+                showClass: false,
+                showOtherOp: false,
+                exportField: 1,
+                exportRange: 2,
+                rules: {},
                 gradeArr: ['2018', '2017', '2016', '2015', '2014', '2013'],
                 classArr: ['1', '2', '3', '4'],
                 keyword: '',
-                editShow: false,
+                conditions: {},
+                filename: '',
+                fields: {},
                 studentInfo: {},
                 loading: false,
                 pageindex: 1,
@@ -84,25 +129,48 @@
         },
 
         methods: {
-            increment (index) {
-                return index+1+((this.pageindex-1)*this.pagesize)
+            vuePrint() {
+
             },
-            close () {
-                this.editShow = false;
-                this.getStudentList()
+            renderOneStudentCard() {
+
             },
-            handleSizeChange(val) {
-                // console.log(`每页 ${val} 条`);
-                this.pagesize = val;
-                this.getStudentList()
+            changeExportField() {
+                // console.log(this.exportField);
+                this.showAll = false;
+                this.showGrade = false;
+                this.showClass = false;
+                this.exportRange = '';
             },
-            handleCurrentChange(val) {
-                // console.log(`当前页: ${val}`);
-                this.pageindex = val;
-                this.getStudentList()
+            changeExportRange() {
+                if ("school" == this.exportRange) {
+                    this.showAll = true;
+                    this.showGrade = false;
+                    this.showClass = false;
+                } else if ("grade" == this.exportRange) {
+                    this.showAll = false;
+                    this.showGrade = true;
+                    this.showClass = false;
+                } else if ("class" == this.exportRange) {
+                    this.showAll = false;
+                    this.showGrade = false;
+                    this.showClass = true;
+                }
+            },
+            buildTooltipContent(fields) {
+                var tooltipStr = "";
+                for (let index in fields) {
+                    var result = this.nameDescDatas.filter(obj => {
+                        return obj.name === index
+                    })
+                    if (result[0]) {
+                        tooltipStr += result[0].desc + ", ";
+                    }
+                }
+                return tooltipStr;
             },
             anyFmt(label, value, data) {
-                console.log(label+"    "+value+"    "+data);
+                // console.log(label+"    "+value+"    "+data);
                 switch (label) {
                     case "sexType":
                         return ("01" == value)?'男':'女';
@@ -204,18 +272,18 @@
             },
             async getStudentList () {
                 this.loading = true;
-                console.log("export index getStudentList  "+this.keyword);
-                try {
-                    await this.$store.dispatch('getStudentList', {
-                        // keyword: "小学2015级4班",
+                // try {
+                    var data = await this.$store.dispatch('getStudentList', {
                         keyword: this.keyword,
+                        conditions: this.conditions,
+                        fields: this.fields,
                         pageindex: this.pageindex,
                         pagesize: this.pagesize
                     })
                     this.loading = false;
-                }catch(e) {
-                    this.loading = false;
-                }
+                // }catch(e) {
+                //     this.loading = false;
+                // }
             },
             del (scope) {
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -242,106 +310,64 @@
                     });
                 
             },
-            edit (scope) {
-                console.log(scope.row)
-                this.editShow = true;
-                this.studentInfo = scope.row;
-                // scope.row.releaseTime = new Date(scope.row.releaseTime)
+            exportSchool() {
+                this.keyword = "";
+                this.fields = this.exportStudentListFields[this.exportField].fields;
+                this.conditions = this.exportStudentListFields[this.exportField].conditions;
+                this.pagesize = 1200;
+                this.filename = "燕山小学全校花名册";
+                this.exportExcel();
             },
-            filterTag(value, row) {
-                return row.type.some( v => v === value)
+            exportGrade(gradeItem) {
+                this.keyword = "";
+                this.fields = this.exportStudentListFields[this.exportField].fields;
+                this.conditions = this.exportStudentListFields[this.exportField].conditions;
+                this.pagesize = 220;
+                this.conditions["grade"] = "小学" + gradeItem.enterYear + "级";
+                this.filename = "小学" + gradeItem.enterYear + "级花名册";
+                this.exportExcel();
             },
-            exportExcel1 () {
-                /* generate workbook object from table */
-                var wb = XLSX.utils.table_to_book(document.querySelector('#student-list'));
-                var ws = wb.Sheets.Sheet1;
-                var cell = ws[XLSX.utils.encode_cell({r:1,c:9})];
-                if(cell && cell.t == 'n') {
-                    cell.t = "s";
-                }
-                
-                /* get binary string as output */
-                var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
-                try {
-                    FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'sheetjs.xlsx')
-                } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-                return wbout
+            exportClass(gradeItem, classItem) {
+                this.keyword = "";
+                this.pagesize = 60;
+                this.fields = this.exportStudentListFields[this.exportField].fields;
+                this.conditions["classNum"] = "小学" + gradeItem.enterYear + "级" + classItem.label + "班";
+                this.filename = "小学" + gradeItem.enterYear + "级" + classItem.label + "班班级花名册";
+                this.exportExcel();
             },
-            exportExcel (gradeItem, classItem) {
-                //keyword: '小学2017级4班',
-                var filename = gradeItem.label + "" + classItem.bigLabel+"班";
-
-                this.keyword = "小学" + gradeItem.enterYear + "级" + classItem.label + "班";
-                console.log(this.keyword);
- 
-                this.getStudentList();
-                var tInfoArr = new Array();
+            async exportExcel () {
+                await this.getStudentList();
+                var data = new Array();
+                var num = 1;
                 for (let index in this.studentList) {
-                    tInfoArr.push(this.fmtOneStudent(this.studentList[index], filename));
-                    // console.log(tInfoArr);
-
+                    // console.log(this.studentList[index]["studentName"]);
+                    data.push(this.fmtOneStudent(this.studentList[index], num));
+                    num++;
                     // break;
                 }
-                console.log("export index 285  "+tInfoArr);
-                var data = tInfoArr;
-                // /* 需要导出的JSON数据 */
-                // var data = [
-                //     {"name":"John", "city": "Seattle"},
-                //     {"name":"Mike", "city": "Los Angeles"},
-                //     {"name":"Zach", "city": "New York"}
-                // ];
-
+                // console.log(data);
                 /* 创建worksheet */
                 var ws = XLSX.utils.json_to_sheet(data);
 
                 /* 新建空workbook，然后加入worksheet */
                 var wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, filename);
+                XLSX.utils.book_append_sheet(wb, ws, this.filename);
 
                 /* 生成xlsx文件 */
-                XLSX.writeFile(wb, filename+".xlsx");
+                XLSX.writeFile(wb, this.filename+".xlsx");
             },
-            fmtOneStudent (studentInfo, filename) {
+            fmtOneStudent (studentInfo, order) {
                 //班级 姓名 家长姓名 联系方式  现住址
-                // let tInfo = JSON.parse(JSON.stringify(studentInfo));
                 let tInfo = new Array();
                 for (let index in studentInfo) {
                     var result = this.nameDescDatas.filter(obj => {
                         return obj.name === index
                     })
+                    tInfo["编号"] = order;
                     if (result[0]) {
-                        tInfo["班级"] = filename;
-
-                        if (result[0].name == "studentName") {
-                            // console.log(result[0].name);
-                            // console.log(index);
-                            // console.log(studentInfo[index]);
-                            tInfo[result[0].desc] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
-                            // break; 
-                            // if ("leftChildrenType" == result[0].name)
-                            // {
-                            //     break;
-                            // }
-                        } else if (result[0].name == "sexType") {
-                            tInfo["性别"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
-                        } else if (result[0].name == "keeper1Name") {
-                            tInfo["父亲姓名"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
-                        } else if (result[0].name == "keeper2Name") {
-                            tInfo["母亲姓名"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
-                        } else if (result[0].name == "address") {
-                            tInfo["现住址"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
-                        } else if (result[0].name == "contactPhoneNumber") {
-                            tInfo["联系电话"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
-                        } else if (result[0].name == "contact1PhoneNumber") {
-                            tInfo["父亲联系电话"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
-                        } else if (result[0].name == "contact2PhoneNumber") {
-                            tInfo["母亲联系电话"] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
-                        }
-
+                        tInfo[result[0].desc] = this.anyFmt(result[0].name, studentInfo[index], result[0].data);
                     }
                 }
-                // console.log(tInfo);
-
                 return tInfo;
             },
         },
@@ -351,7 +377,6 @@
                 'studentTotal',
                 'gradeDescs',
                 'classDescs',
-                'nameDescDatas',
                 'IDTypes',
                 'sexTypes',
                 'ethnics',
@@ -373,6 +398,7 @@
                 'disabilities', 
                 'mainstreams',
                 'nameDescDatas',
+                'exportStudentListFields',
             ])
         }
     }
@@ -393,6 +419,32 @@
         }
         .tag {
             margin: 0 10px;
+        }
+        .el-row {
+            margin-bottom: 20px;
+            &:last-child {
+            margin-bottom: 0;
+            }
+        }
+        .el-col {
+            border-radius: 4px;
+        }
+        .bg-purple-dark {
+            background: #99a9bf;
+        }
+        .bg-purple {
+            background: #d3dce6;
+        }
+        .bg-purple-light {
+            background: #e5e9f2;
+        }
+        .grid-content {
+            border-radius: 4px;
+            min-height: 36px;
+        }
+        .row-bg {
+            padding: 10px 0;
+            background-color: #f9fafc;
         }
     }
 </style>

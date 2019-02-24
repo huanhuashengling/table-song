@@ -163,7 +163,7 @@
                 this.grade = studentInfo["grade"];
                 this.classNum = studentInfo["classNum"];
                 this.residentType = this.basicFmt(this.residentTypes, studentInfo["residentType"]);
-                this.address = studentInfo["address"];
+                this.address = studentInfo["familyAddress"];
                 this.keeper1Name = studentInfo["keeper1Name"];
                 this.relation1 = this.basicFmt(this.relations, studentInfo["relation1"]);
                 this.contact1PhoneNumber = studentInfo["contact1PhoneNumber"];

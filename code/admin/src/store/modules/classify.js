@@ -1,3 +1,64 @@
+//导出花名册集合
+
+export const exportStudentListFields = [
+    { id: "0",  name: '党员连心', 
+        fields: { 'classNum': 1, 
+                'grade': 1, 
+                'studentName': 1, 
+                'sexType': 1, 
+                'familyAddress': 1, 
+                'keeper1Name': 1, 
+                'keeper2Name': 1, 
+                'contactPhoneNumber': 1, },
+    conditions: {
+        'isPre': "02",
+    },
+    },
+    { id: "1",  name: '春游', 
+        fields: {'classNum': 1, 
+                'grade': 1, 
+                'studentName': 1, 
+                'sexType': 1, 
+                'studentID': 1, 
+                'contactPhoneNumber': 1, },
+        conditions: {
+            'isPre': "02",
+        },
+    },
+    { id: "2",  name: '誊分', fields: {'studentName': 1, 
+                                        'sexType': 1, },
+                                        conditions: {
+                                            'isPre': "02",
+                                        },
+    },
+    { id: "3",  name: '保险', 
+    fields: { 'classNum': 1, 
+                'grade': 1, 
+                'studentName': 1, 
+                'sexType': 1, 
+                'studentID': 1, 
+                'contactPhoneNumber': 1, },
+    conditions: {
+        'isPre': "02",
+    },
+    },
+    { id: "4",  name: '在校生全部信息', 
+    fields:{'_id': 0, 
+            'isPre': 0, 
+            'createTime': 0, }, 
+    conditions: {
+        'isPre': "02",
+    },
+    },
+    { id: "5",  name: '新生学籍信息', 
+    fields:{'_id': 0, 
+            'isPre': 0, 
+            'createTime': 0, }, 
+    conditions: {
+        'isPre': "01",
+    },
+    },
+]
 //年级
 export const gradeDescs = [
     { id: "01",  enterYear: '2018', label:"一" },

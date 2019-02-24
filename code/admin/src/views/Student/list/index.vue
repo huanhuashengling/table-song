@@ -65,6 +65,8 @@
                 loading: false,
                 pageindex: 1,
                 pagesize: 10,
+                conditions: {},
+                fields: {},
                 size_scoped: [10, 20, 30, 40],
                 headerOptions: [
                 //------学生个人基本信息
@@ -206,6 +208,8 @@
                 try {
                     await this.$store.dispatch('getStudentList', {
                         keyword: this.keyword,
+                        conditions: this.exportStudentListFields[4].conditions,
+                        fields: this.exportStudentListFields[4].fields,
                         pageindex: this.pageindex,
                         pagesize: this.pagesize
                     })
@@ -273,6 +277,7 @@
                 'ethnics',
                 'nations',
                 'relations',
+                'exportStudentListFields',
             ])
         }
     }

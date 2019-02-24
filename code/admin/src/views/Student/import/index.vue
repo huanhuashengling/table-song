@@ -33,6 +33,8 @@
         data() {
             return {
                 loading: false,
+                fields: {},
+                conditions: {},
                 //------学生个人基本信息
                 info: {
                     //------学生个人基本信息
@@ -297,6 +299,8 @@
                 try {
                     await this.$store.dispatch('getStudentList', {
                         keyword: this.keyword,
+                        conditions: this.conditions,
+                        fields: this.fields,
                         pageindex: this.pageindex,
                         pagesize: this.pagesize
                     })

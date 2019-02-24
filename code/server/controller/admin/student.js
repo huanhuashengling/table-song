@@ -20,25 +20,22 @@ import path from 'path'
 module.exports = {
     async list (ctx, next) {
         console.log('----------------获取学生学籍列表 student/list-----------------------');
-        let { keyword, pageindex = 1, pagesize = 10} = ctx.request.query;
-        console.log('keyword:'+keyword+','+'pageindex:'+pageindex +','+ 'pagesize:'+pagesize)
+        let { keyword, pageindex = 1, pagesize = 10, conditions, fields} = ctx.request.query;
+        // let { keyword, conditions = {"classNum": "小学2015级1班"}, pageindex = 1, pagesize = 10, fields = {"grade": "1", "classNum": "1", "studentName": "1", "sexType": "1"}} = ctx.request.query;
+        console.log('pageindex:'+pageindex +','+ 'pagesize:'+pagesize)
+        // console.log(JSON.parse(fields))
+        // console.log(JSON.parse(conditions))
         try {
-            
-            let reg = new RegExp(keyword, 'i')
-            let data = await ctx.findPage(studentModel, {
-                $or: [
-                    {studentName: { $regex: reg}},
-                    {studentID: { $regex: reg}},
-                    {classNum: { $regex: reg}},
-                ]
-            }, {createTime: 0, html: 0}, {limit: pagesize*1, skip: (pageindex-1)*pagesize});
+            let data = await ctx.findPage(studentModel, 
+                                        JSON.parse(conditions), 
+                                        JSON.parse(fields), 
+                                        {limit: pagesize*1, skip: (pageindex-1)*pagesize});
             ctx.send(data)
         }catch (e){
             console.log(e)
             ctx.sendError(e)
         }
     },
-
     async findOne (ctx, next) {
         console.log('----------------获取单个学生信息 student/findOne-----------------------');
         let paramsData = ctx.request.query;
