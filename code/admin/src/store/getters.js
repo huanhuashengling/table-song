@@ -5,6 +5,7 @@ const getters = {
     userList: state =>state.user.list,
     userTotal: state =>state.user.total,
 
+    applyTypes: state => state.student.applyTypes,
     IDTypes: state => state.student.IDTypes,
     sexTypes: state => state.student.sexTypes,
     ethnics: state => state.student.ethnics,

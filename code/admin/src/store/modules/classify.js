@@ -75,6 +75,13 @@ export const classDescs = [
     { id: "03",  bigLabel: '丙', label:"3" },
     { id: "04",  bigLabel: '丁', label:"4" },
 ]
+//新生类别
+export const applyTypes = [
+    { id: "01",  name: '有房有户' },
+    { id: "02",  name: '有房无户' },
+    { id: "03",  name: '有户无房（第一类）' },
+    { id: "04",  name: '有户无房（第二类）' },
+    { id: "05",  name: '无房无户' }]
 //健康状况
 export const healthStatuses = [
     { id: "01",  name: '健康或良好' },

@@ -41,6 +41,7 @@ export const asyncRouterMap = [
         icon: 'zuowen',
         children: [
             { path: 'list', component: _import_('PreStudent/list/index'), name: '新生学籍列表' },
+            { path: 'import', component: _import_('PreStudent/import/index'), name: '市招生信息导入' },
             { path: 'add', component: _import_('PreStudent/add/index'), name: '添加学生学籍' },
             { path: 'export', component: _import_('PreStudent/export/index'), name: '导出注册学籍' },
         ]

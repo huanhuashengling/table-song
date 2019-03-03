@@ -83,6 +83,8 @@ let studentSchema = db.Schema({
     cityStudentNumber: String,          //    市学籍
 
     isPre: String,                      //    区分在校学生和未注册学籍的学生
+    applyType: String,                  //    报名类型
+    liveApplyNum: String,               //    现场报名序号
 
     createTime: { type: Date, default: Date.now}
 })

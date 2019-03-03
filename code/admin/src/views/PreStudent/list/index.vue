@@ -49,7 +49,7 @@
 <script>
     import { mapGetters } from 'vuex'
     import EditComponent from '../edit/index'
-    import { sexTypes, ethnics, nations, relations } from 'store/modules/classify'
+    import { sexTypes, ethnics, nations, relations, applyTypes } from 'store/modules/classify'
     import { CodeToText, TextToCode } from 'element-china-area-data'
     import FileSaver from 'file-saver'
     import XLSX from 'xlsx'
@@ -72,11 +72,11 @@
                 //------学生个人基本信息
                 { label: '_id',      prop: '_id',       hidden: true, },
                 
+                { label: '报名类型',      prop: 'applyType', format: true, minWidth: '100' },
                 { label: '姓名',      prop: 'studentName', minWidth: '100' },
                 { label: '性别',      prop: 'sexType', format: true, minWidth: '80' },
                 { label: '出生日期',   prop: 'birthDate', format: true, minWidth: '110' },
-                { label: '出生地',     prop: 'brithPlaceCode', format: true, minWidth: '200' },
-                { label: '籍贯',      prop: 'grandPlaceCode', format: true, minWidth: '150' },
+                { label: '户口所在地',     prop: 'householdPlaceCode', format: true, minWidth: '200' },
                 { label: '民族',       prop: 'ethnic', format: true, minWidth: '80' },
                 { label: '国家地区',   prop: 'nation', format: true, minWidth: '110' },
                 { label: '联系电话',    prop: 'contactPhoneNumber',},
@@ -155,11 +155,8 @@
                         var idStr = row.studentID;
                         return idStr.substring(6, 10)+"-"+idStr.substring(10, 12)+"-"+idStr.substring(12, 14);
                     break;
-                    case "出生地":
-                        return this.codeFmt(row.brithPlaceCode);
-                    break;
-                    case "籍贯":
-                        return this.codeFmt(row.grandPlaceCode);
+                    case "户口所在地":
+                        return this.codeFmt(row.householdPlaceCode);
                     break;
                     case "民族":
                         return ("01" == row.ethnic)?'汉族':this.basicFmt(ethnics, row.ethnic);
@@ -184,6 +181,9 @@
                     break;
                     case "是否监护人2":
                         return ("01" == row.keeper2)?'是':'否';
+                    break;
+                    case "报名类型":
+                        return this.basicFmt(applyTypes, row.applyType);
                     break;
                 }
             },
