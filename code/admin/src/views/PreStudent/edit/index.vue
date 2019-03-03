@@ -231,7 +231,22 @@
                         <el-input type="text" v-model="info.contact1PhoneNumber"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="18">
+                <el-col :span="8">
+                    <el-form-item label="身份证件类型" prop="keeper1IDType">
+                        <el-select v-model="info.keeper1IDType" clearable placeholder="请选择身份证件类型" class="block">
+                            <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="证件号码" prop="keeper1ID">
+                        <el-input type="text" v-model="info.keeper1ID"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="20">
                     <el-form-item label="现住址" prop="address1">
                         <el-input type="text" v-model="info.address1" placeholder="可与学生一致，要到门牌号"></el-input>
                     </el-form-item>
@@ -277,6 +292,21 @@
                         <el-input type="text" v-model="info.contact2PhoneNumber"></el-input>
                     </el-form-item>
                 </el-col>
+                <el-col :span="8">
+                    <el-form-item label="身份证件类型" prop="keeper2IDType">
+                        <el-select v-model="info.keeper2IDType" clearable placeholder="请选择身份证件类型" class="block">
+                            <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="证件号码" prop="keeper2ID">
+                        <el-input type="text" v-model="info.keeper2ID"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
                 <el-col :span="18">
                     <el-form-item label="现住址" prop="address2">
                         <el-input type="text" v-model="info.address2" placeholder="可与学生一致，要到门牌号"></el-input>

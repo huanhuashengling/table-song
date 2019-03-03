@@ -244,7 +244,22 @@
                         <el-input type="text" v-model="info.contact1PhoneNumber"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="18">
+                <el-col :span="8">
+                    <el-form-item label="身份证件类型" prop="keeper1IDType">
+                        <el-select v-model="info.keeper1IDType" clearable placeholder="请选择身份证件类型" class="block">
+                            <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="证件号码" prop="keeper1ID">
+                        <el-input type="text" v-model="info.keeper1ID"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="20">
                     <el-form-item label="现住址" prop="address1">
                         <el-input type="text" v-model="info.address1" placeholder="可与学生一致，要到门牌号"></el-input>
                     </el-form-item>
@@ -285,12 +300,27 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="6">
+                <el-col :span="8">
                     <el-form-item label="联系电话" prop="contact2PhoneNumber">
                         <el-input type="text" v-model="info.contact2PhoneNumber"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="18">
+                <el-col :span="8">
+                    <el-form-item label="身份证件类型" prop="keeper2IDType">
+                        <el-select v-model="info.keeper2IDType" clearable placeholder="请选择身份证件类型" class="block">
+                            <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="证件号码" prop="keeper2ID">
+                        <el-input type="text" v-model="info.keeper2ID"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="20">
                     <el-form-item label="现住址" prop="address2">
                         <el-input type="text" v-model="info.address2" placeholder="可与学生一致，要到门牌号"></el-input>
                     </el-form-item>
@@ -383,7 +413,7 @@
                     householdPlaceCode1: [],        //55  监护人1户口所在地
                     contact1PhoneNumber: '',        //56  监护人1联系电话
                     keeper1: '01',                  //57  是否是监护人
-                    keeper1IDtype: '',              //58  监护人1身份证类型
+                    keeper1IDType: '',              //58  监护人1身份证类型
                     keeper1ID: '',                  //59  监护人1身份证号码
                     keeper1position: '',            //60  监护人1职务
                     //-------学生家庭成员或监护人信息二
@@ -396,7 +426,7 @@
                     householdPlaceCode2: [],        //67  监护人2户口所在地
                     contact2PhoneNumber: '',        //68  监护人2联系电话
                     keeper2: '01',                  //69  是否是监护人
-                    keeper2IDtype: '',              //70  监护人2身份证类型
+                    keeper2IDType: '',              //70  监护人2身份证类型
                     keeper2ID: '',                  //71  监护人2身份证号码
                     keeper2position: '',            //72  监护人2职务
 
@@ -436,7 +466,7 @@
                     notMainland: [
                         { required: true, message: '请选择', trigger: 'change', type: 'string' }
                     ],
-                    type: [
+                    IDType: [
                         { required: true, message: '请选择身份证件类型', trigger: 'change', type: 'string' }
                     ],
                     studentID: [
@@ -489,6 +519,13 @@
                     address1: [
                         { required: true, message: '请填写现住址', trigger: 'blur' }
                     ],
+                    keeper1IDType: [
+                        { required: true, message: '请选择身份证件类型', trigger: 'change', type: 'string' }
+                    ],
+                    keeper1ID: [
+                        { required: true, message: '请填写身份证件号码', trigger: 'blur', type: 'string' },
+                        { message: '请填写正确身份证件号码', validator: checkIdNum, trigger: 'blur', type: 'string' },
+                    ],
                     //-------学生家庭成员或监护人信息二
                     keeper2Name: [
                         { required: true, message: '请填写', trigger: 'blur' }
@@ -507,6 +544,13 @@
                     ],
                     address2: [
                         { required: true, message: '请填写现住址', trigger: 'blur' }
+                    ],
+                    keeper2IDType: [
+                        { required: true, message: '请选择身份证件类型', trigger: 'change', type: 'string' }
+                    ],
+                    keeper2ID: [
+                        { required: true, message: '请填写身份证件号码', trigger: 'blur', type: 'string' },
+                        { message: '请填写正确身份证件号码', validator: checkIdNum, trigger: 'blur', type: 'string' },
                     ],
                 }
             }
