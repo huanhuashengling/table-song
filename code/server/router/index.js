@@ -27,11 +27,11 @@ export default app => {
 
 
 /*----------------------client-------------------------------*/
-    // client/文章请求
-    router.get('/client_demo_api/blog/list', app.client.blog.list)
-    router.get('/client_demo_api/blog/info', app.client.blog.info)
-
-    
+    // client 新生学籍请求
+    router.get('/client_demo_api/student/list', app.client.student.list)
+    router.get('/client_demo_api/student/info', app.client.student.info)
+    router.post('/client_demo_api/student/update', app.client.student.update)
+    router.post('/client_demo_api/student/add', app.client.student.add)
 
 
     app.use(router.routes()).use(router.allowedMethods());

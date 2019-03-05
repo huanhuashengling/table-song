@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css'
 import './style/index.css'
 import './javascript/index'
 
@@ -12,7 +14,7 @@ Object.keys(filters).forEach(key => {
 
 import customComponents from './custom-components'
 Vue.use(customComponents)
-
+Vue.use(ElementUI)
 new Vue({
     el: '#app',
     router,

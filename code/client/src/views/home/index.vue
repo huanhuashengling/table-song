@@ -1,34 +1,23 @@
 <template>
-    <div class="home-wrapper cf">
-        <infoComponent></infoComponent>
-        <div :class="{'tags-box': pc_bol}">
-            <TagsComponent></TagsComponent>
-        </div>
-        <div :class="{'view-box': pc_bol}">
-            <router-view>
-                <BlogComponent></BlogComponent>
-            </router-view>
-        </div>
-        
-
-        
-    </div>
+    <StudentComponent :info="studentInfo"></StudentComponent>
 </template>
 <script>
     import { mapGetters } from 'vuex'
-    import infoComponent from './info.vue'
-    import BlogComponent from './blog.vue'
-    import TagsComponent from './tags.vue'
+    // import searchComponent from './search.vue'
+    // import infoComponent from './info.vue'
+    import StudentComponent from './student.vue'
+    // import TagsComponent from './tags.vue'
     export default {
         data () {
             return {
+                studentInfo: {},
                 winH: document.documentElement.clientHeight || document.body.clientHeight
             }
         },
         components: {
-            infoComponent,
-            BlogComponent,
-            TagsComponent
+            // searchComponent,
+            StudentComponent,
+            // TagsComponent
         },
         mounted () {
             window.addEventListener('scroll', () => {
@@ -39,7 +28,7 @@
                     if (this.blogLoadingBol) {
                         console.log(111)
                         // this.pageindex ++;
-                        // this.$store.dispatch('getBlogList', {
+                        // this.$store.dispatch('getStudentList', {
                         //     type: this.$route.params.classify,
                         //     pageindex: this.pageindex
                         // })
@@ -48,7 +37,10 @@
             })
         },
         computed: {
-            ...mapGetters(['pc_bol'])
+            ...mapGetters([
+                'pc_bol',
+                'stduentInfo',
+            ])
         }
     }
 </script>

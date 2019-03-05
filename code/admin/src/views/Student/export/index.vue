@@ -203,11 +203,11 @@
                     case "disability":
                     case "vehicle":
                     case "relation1":
-                    case "keeper1ethnic":
-                    case "keeper1IDtype":
+                    case "keeper1Ethnic":
+                    case "keeper1IDType":
                     case "relation2":
-                    case "keeper2ethnic":
-                    case "keeper2IDtype":
+                    case "keeper2Ethnic":
+                    case "keeper2IDType":
                         return this.basicFmt(this[data], value);
                     break;
                     // case "householdPlaceCode1":

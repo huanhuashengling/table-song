@@ -11,7 +11,7 @@ const router = new Router({
         {
             path: '/',
             component: _import_('home/index'),
-            redirect: 'blog/all',
+            // redirect: 'blog/all',
             children: [
                 {
                     path: 'blog/:classify',

@@ -54,29 +54,29 @@ let studentSchema = db.Schema({
     //-------学生家庭成员或监护人信息一
     keeper1Name: String,                //49  监护人1姓名
     relation1: String,                  //50  监护人1关系
-    relation1desc: String,              //51  监护人1关系说明
-    keeper1ethnic: String,              //52  监护人1民族
-    keeper1workplace: String,           //53  监护人1工作单位
+    relation1Desc: String,              //51  监护人1关系说明
+    keeper1Ethnic: String,              //52  监护人1民族
+    keeper1Workplace: String,           //53  监护人1工作单位
     address1: String,                   //54  监护人1现住址
     householdPlaceCode1: String,        //55  监护人1户口所在地
     contact1PhoneNumber: String,        //56  监护人1联系电话
     keeper1: String,                    //57  是否是监护人
-    keeper1IDtype: String,              //58  监护人1身份证类型
+    keeper1IDType: String,              //58  监护人1身份证类型
     keeper1ID: String,                  //59  监护人1身份证号码
-    keeper1position: String,            //60  监护人1职务
+    keeper1Position: String,            //60  监护人1职务
     //-------学生家庭成员或监护人信息二
     keeper2Name: String,                //61  监护人2姓名
     relation2: String,                  //62  监护人2关系
-    relation2desc: String,              //63  监护人2关系说明
-    keeper2ethnic: String,              //64  监护人2民族
-    keeper2workplace: String,           //65  监护人2工作单位
+    relation2Desc: String,              //63  监护人2关系说明
+    keeper2Ethnic: String,              //64  监护人2民族
+    keeper2Workplace: String,           //65  监护人2工作单位
     address2: String,                   //66  监护人2现住址
     householdPlaceCode2: String,        //67  监护人2户口所在地
     contact2PhoneNumber: String,        //68  监护人2联系电话
     keeper2: String,                    //69  是否是监护人
-    keeper2IDtype: String,              //70  监护人2身份证类型
+    keeper2IDType: String,              //70  监护人2身份证类型
     keeper2ID: String,                  //71  监护人2身份证号码
-    keeper2position: String,            //72  监护人2职务
+    keeper2Position: String,            //72  监护人2职务
     
     //市学籍信息
     hasDoubleGirls: String,             //    是否双女户
