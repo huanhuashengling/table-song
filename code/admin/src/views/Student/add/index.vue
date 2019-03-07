@@ -315,7 +315,7 @@
 <script>
     import { mapGetters } from 'vuex'
     import Markdown from 'components/Markdown'
-    import { checkIdNum } from 'src/utils/rules'
+    import { checkID } from 'src/utils/rules'
     import { regionData } from 'element-china-area-data'
     export default {
         // components: { Markdown },
@@ -442,7 +442,7 @@
                     ],
                     studentID: [
                         { required: true, message: '请填写身份证件号码', trigger: 'blur', type: 'string' },
-                        { message: '请填写正确身份证件号码', validator: checkIdNum, trigger: 'blur', type: 'string' },
+                        { message: '请填写正确身份证件号码', validator: checkID, trigger: 'blur', type: 'string' },
                     ],
                     //------学生个人辅助信息
                     householdPlaceCode: [

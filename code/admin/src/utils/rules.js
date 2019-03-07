@@ -38,7 +38,7 @@ export default {
   phone: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '目前只支持中国大陆的手机号码', trigger: 'blur' }],
   numPot2: [{ required: true, validator: checkNumPot2, trigger: 'blur' }],
   InterNum: [{ required: true, validator: checkInterNum, trigger: 'blur' }],
-  IdNum: [{ required: true, validator: checkIdNum, trigger: 'blur' }]
+  IdNum: [{ required: true, validator: checkID, trigger: 'blur' }]
 }
 
 
