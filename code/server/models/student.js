@@ -17,6 +17,7 @@ let studentSchema = db.Schema({
     //------学生个人辅助信息
     householdPlaceCode: String,         //17  户口所在地
     householdType: String,              //18  户口性质
+    community: String,                  //    街道社区
     strongPoint: String,                //19  特长
     IDValidityPeriod: String,           //16  身份证有效期
     usedName: String,                   //15  曾用名

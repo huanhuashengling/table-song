@@ -54,6 +54,7 @@
                     //------学生个人辅助信息
                     householdPlaceCode: [],         //17  户口所在地
                     householdType: '',              //18  户口性质
+                    community: '',                  //    社区街道
                     strongPoint: '',                //19  特长
                     IDValidityPeriod: '',           //16  身份证有效期
                     usedName: '',                   //15  曾用名
@@ -144,7 +145,7 @@
                             // console.log(sheetArray);
                             for (let index in sheetArray) {
                                 this.createStudentInfo(sheetArray[index]);
-                                // break;
+                                break;
                             }
                         // }
                     // } catch (e) {
@@ -155,8 +156,8 @@
                 fileReader.readAsBinaryString(file.raw);
             },
             createStudentInfo (data) {
+                console.log(this.info);
                 let tInfo = JSON.parse(JSON.stringify(this.info));
-
                 for (let index in data) {
                     let value = data[index];
                     switch (index) {
@@ -229,14 +230,14 @@
                     }
                     // break;
                 }
-                // console.log(tInfo);
-                try{
-                    this.$store.dispatch('addStudent', tInfo);
-                    this.loading = false
-                    this.$router.push('/pre_student/list')
-                }catch(e) {
-                    this.loading = false
-                }
+                console.log(tInfo);
+                // try{
+                //     this.$store.dispatch('addStudent', tInfo);
+                //     this.loading = false
+                //     this.$router.push('/pre_student/list')
+                // }catch(e) {
+                //     this.loading = false
+                // }
             },
             codeFmt(str) {
                 var returnStr = "";

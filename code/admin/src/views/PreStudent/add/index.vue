@@ -110,8 +110,8 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="街道/社区/乡镇" prop="usedStudentName">
-                        <el-input type="text" v-model="info.usedStudentName"></el-input>
+                    <el-form-item label="社区" prop="community">
+                        <el-input type="text" v-model="info.community" placeholder="{街道/社区}{乡镇/村}"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -345,7 +345,7 @@
 <script>
     import { mapGetters } from 'vuex'
     import Markdown from 'components/Markdown'
-    import { checkIdNum } from 'src/utils/rules'
+    import { checkID } from 'src/utils/rules'
     import { regionData } from 'element-china-area-data'
     export default {
         // components: { Markdown },
@@ -370,6 +370,7 @@
                     //------学生个人辅助信息
                     householdPlaceCode: [],         //17  户口所在地
                     householdType: '',              //18  户口性质
+                    community: '',                  //    社区街道
                     strongPoint: '',                //19  特长
                     IDValidityPeriod: '',           //16  身份证有效期
                     usedName: '',                   //15  曾用名
@@ -471,7 +472,7 @@
                     ],
                     studentID: [
                         { required: true, message: '请填写身份证件号码', trigger: 'blur', type: 'string' },
-                        { message: '请填写正确身份证件号码', validator: checkIdNum, trigger: 'blur', type: 'string' },
+                        { message: '请填写正确身份证件号码', validator: checkID, trigger: 'blur', type: 'string' },
                     ],
                     //------学生个人辅助信息
                     householdPlaceCode: [
@@ -479,6 +480,9 @@
                     ],
                     householdType: [
                         { required: true, message: '请选择户口性质', trigger: 'blur' }
+                    ],
+                    community: [
+                        { required: true, message: '请填写社区信息', trigger: 'change' }
                     ],
                     //------学生个人联系方式
                     address: [
@@ -524,7 +528,7 @@
                     ],
                     keeper1ID: [
                         { required: true, message: '请填写身份证件号码', trigger: 'blur', type: 'string' },
-                        { message: '请填写正确身份证件号码', validator: checkIdNum, trigger: 'blur', type: 'string' },
+                        { message: '请填写正确身份证件号码', validator: checkID, trigger: 'blur', type: 'string' },
                     ],
                     //-------学生家庭成员或监护人信息二
                     keeper2Name: [
@@ -550,7 +554,7 @@
                     ],
                     keeper2ID: [
                         { required: true, message: '请填写身份证件号码', trigger: 'blur', type: 'string' },
-                        { message: '请填写正确身份证件号码', validator: checkIdNum, trigger: 'blur', type: 'string' },
+                        { message: '请填写正确身份证件号码', validator: checkID, trigger: 'blur', type: 'string' },
                     ],
                 }
             }

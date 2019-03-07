@@ -110,8 +110,8 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="街道/社区/乡镇" prop="usedStudentName">
-                        <el-input type="text" v-model="info.usedStudentName"></el-input>
+                    <el-form-item label="社区" prop="community">
+                        <el-input type="text" v-model="info.community" placeholder="{街道/社区}{乡镇/村}"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -340,6 +340,7 @@
                     //------学生个人辅助信息
                     householdPlaceCode: [],         //17  户口所在地
                     householdType: '',              //18  户口性质
+                    community: '',                  //    社区街道
                     strongPoint: '',                //19  特长
                     IDValidityPeriod: '',           //16  身份证有效期
                     usedName: '',                   //15  曾用名
@@ -449,6 +450,9 @@
                     ],
                     householdType: [
                         { required: true, message: '请选择户口性质', trigger: 'blur' }
+                    ],
+                    community: [
+                        { required: true, message: '请填写社区信息', trigger: 'change' }
                     ],
                     //------学生个人联系方式
                     address: [

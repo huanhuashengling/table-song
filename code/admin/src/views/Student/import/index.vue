@@ -54,6 +54,7 @@
                     //------学生个人辅助信息
                     householdPlaceCode: [],         //17  户口所在地
                     householdType: '',              //18  户口性质
+                    community: '',                  //    社区街道
                     strongPoint: '',                //19  特长
                     IDValidityPeriod: '',           //16  身份证有效期
                     usedName: '',                   //15  曾用名
