@@ -31,5 +31,12 @@ const getters = {
     gradeDescs: state => state.student.gradeDescs,
     classDescs: state => state.student.classDescs,
     exportStudentListFields: state => state.student.exportStudentListFields,
+
+    teacherNameDescDatas: state => state.teacher.teacherNameDescDatas,
+    teacherList: state => state.teacher.teacherList,
+    teacherTotal: state => state.teacher.teacherTotal,
+    oneTeacher: state => state.teacher.oneTeacher,
+    exportTeacherListFields: state => state.teacher.exportTeacherListFields,
+
 }
 export default getters

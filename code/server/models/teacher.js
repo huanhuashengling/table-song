@@ -1,0 +1,34 @@
+import db from '../mongodb'
+let teacherSchema = db.Schema({
+    teacherName: String,                //1  姓名
+    sexType: String,                    //2  性别
+    birthDate: String,                  //3  出生日期  
+    ethnic: String,                     //4  民族  
+    contactPhoneNumber: String,         //5  联系电话
+    IDType: String,                     //6  身份证件类型
+    teacherID: String,                  //7  身份证号
+    startWorkDate: String,              //8  开始工作时间
+    thisWorkplaceYears: String,         //9  本单位工作年限 
+    startTeachDate: String,             //10  开始从教时间
+    highestEducation: String,           //11  最高学历
+    personalIdentity: String,           //12  个人身份
+    politicalStatus: String,            //13  政治面貌
+    degree: String,                     //14  学位
+    jobRank: String,                    //15  岗位等级
+    reviewPassDate: String,             //16  评审通过时间
+    jobTitle: String,                   //17  职称
+    jobPosition: String,                //18  职务
+    teachingCourse: String,             //19  任教课程
+    graduatedSchool: String,            //20  毕业院校
+    major: String,                      //21  专业
+    certificateCode: String,            //22  教师资格证编号
+    certificateSubject: String,         //23  教师资格证学科
+    mandarinLevel: String,              //24  普通话等级
+    classTeacher: String,               //25  哪个班的班主任
+    subjectLeader: String,              //26  哪个学科组长
+    gradeLeader: String,                //27  哪个年级组长
+    isFormal: String,                   //28  是否正式老师
+    isOnPosition: String,               //29  是否在岗
+    createTime: { type: Date, default: Date.now}
+})
+export default db.model('teacher', teacherSchema)

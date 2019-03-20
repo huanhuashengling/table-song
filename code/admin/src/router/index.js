@@ -59,6 +59,20 @@ export const asyncRouterMap = [
             { path: 'export', component: _import_('Student/export/index'), name: '在校学籍导出' },
             { path: 'card', component: _import_('Student/card/index'), name: '打印学籍卡片' },
         ]
+    },
+    {
+        path: '/teacher',
+        name: '教师管理',
+        component: _import_('Layout/index'),
+        redirect: '/teacher/list',
+        dropdown: true,
+        icon: 'zuowen',
+        children: [
+            { path: 'add', component: _import_('Teacher/add/index'), name: '新增教师信息' },
+            { path: 'list', component: _import_('Teacher/list/index'), name: '教师信息列表' },
+            { path: 'import', component: _import_('Teacher/import/index'), name: '教师信息导入' },
+            { path: 'export', component: _import_('Teacher/export/index'), name: '教师信息导出' },
+        ]
     }
 ]
 

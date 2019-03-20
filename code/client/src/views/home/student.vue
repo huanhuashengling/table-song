@@ -16,9 +16,9 @@
                     <el-button type="primary" :loading="loading" @click="clearForm">清空所有数据</el-button>
                 </el-col>
             </el-row>
-            <el-row style="padding-top:20px">
+            <el-row style="padding-top:20px" :gutter="10">
                 <el-col :span="6">
-                    <h2>学校名称：长沙市芙蓉区燕山小学</h2>
+                    <h2>学校名称：芙蓉区燕山小学</h2>
                 </el-col>
                 <el-col :span="6">
                     <h2>学校标识码：2143019582</h2>
@@ -29,7 +29,7 @@
             </el-row>
             <el-row style="padding-top:20px">
                 
-                <el-form :model="info" :rules="rules" ref="form" label-width="150px" class="form">
+                <el-form :model="info" :rules="rules" ref="form" label-width="100px" class="form">
                     报名信息<hr><br />
                     <el-row>
                         <el-col :span="8">
@@ -84,7 +84,7 @@
                         <el-col :span="8">
                             <el-form-item label="出生地" prop="brithPlaceCode">
                                 <el-cascader
-                                style="width: 280px"
+                                style="width: 260px"
                                 :options="birthPlaceOptions"
                                 v-model="birthPlaceCodeToArray"
                                 @change="handleBirthPlaceChange">
@@ -94,7 +94,7 @@
                         <el-col :span="8">
                             <el-form-item label="籍贯" prop="grandPlaceCode">
                                 <el-cascader
-                                style="width: 280px"
+                                style="width: 260px"
                                 :options="grandPlaceOptions"
                                 v-model="grandPlaceCodeToArray"
                                 @change="handleGrandPlaceChange">
@@ -122,8 +122,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="身份证件类型" prop="IDType">
-                                <el-select v-model="info.IDType" clearable placeholder="请选择身份证件类型" class="block">
+                            <el-form-item label="身份证类型" prop="IDType">
+                                <el-select v-model="info.IDType" clearable placeholder="请选择身份证类型" class="block">
                                     <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
                                     </el-option>
                                 </el-select>
@@ -140,7 +140,7 @@
                         <el-col :span="8">
                             <el-form-item label="户口所在地" prop="householdPlaceCode">
                                 <el-cascader
-                                style="width: 280px"
+                                style="width: 260px"
                                 :options="householdPlaceOptions"
                                 v-model="householdPlaceCodeToArray"
                                 @change="handleHouseholdPlaceChange">
@@ -185,7 +185,7 @@
                     学生个人扩展信息<hr><br />
                     <el-row>
                         <el-col :span="6">
-                            <el-form-item label="是否独生子女" prop="isOneChild" class="left-item">
+                            <el-form-item label="独生子女" prop="isOneChild" class="left-item">
                                 <el-select v-model="info.isOneChild" clearable placeholder="请选择" class="block">
                                     <el-option v-for="item in switchStates" :key="item.id" :label="item.name" :value="item.id">
                                     </el-option>
@@ -201,7 +201,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="是否留守儿童" prop="leftChildrenType" class="left-item">
+                            <el-form-item label="留守儿童" prop="leftChildrenType" class="left-item">
                                 <el-select v-model="info.leftChildrenType" clearable placeholder="请选择" class="block">
                                     <el-option v-for="item in leftChildrenTypes" :key="item.id" :label="item.name" :value="item.id">
                                     </el-option>
@@ -260,7 +260,7 @@
                         <el-col :span="8">
                             <el-form-item label="户口所在地" prop="householdPlaceCode1">
                                 <el-cascader
-                                style="width: 280px"
+                                style="width: 260px"
                                 :options="householdPlaceOptions"
                                 v-model="householdPlaceCode1ToArray"
                                 @change="handleHouseholdPlace1Change">
@@ -283,8 +283,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="身份证件类型" prop="keeper1IDType">
-                                <el-select v-model="info.keeper1IDType" clearable placeholder="请选择身份证件类型" class="block">
+                            <el-form-item label="身份证类型" prop="keeper1IDType">
+                                <el-select v-model="info.keeper1IDType" clearable placeholder="请选择身份证类型" class="block">
                                     <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
                                     </el-option>
                                 </el-select>
@@ -326,7 +326,7 @@
                         <el-col :span="8">
                             <el-form-item label="户口所在地" prop="householdPlaceCode2">
                                 <el-cascader
-                                style="width: 280px"
+                                style="width: 260px"
                                 :options="householdPlaceOptions"
                                 v-model="householdPlaceCode2ToArray"
                                 @change="handleHouseholdPlace2Change">
@@ -349,8 +349,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="身份证件类型" prop="keeper2IDType">
-                                <el-select v-model="info.keeper2IDType" clearable placeholder="请选择身份证件类型" class="block">
+                            <el-form-item label="身份证类型" prop="keeper2IDType">
+                                <el-select v-model="info.keeper2IDType" clearable placeholder="请选择身份证类型" class="block">
                                     <el-option v-for="item in IDTypes" :key="item.id" :label="item.name" :value="item.id">
                                     </el-option>
                                 </el-select>
@@ -443,7 +443,7 @@
                         { required: true, message: '请选择', trigger: 'change', type: 'string' }
                     ],
                     IDType: [
-                        { required: true, message: '请选择身份证件类型', trigger: 'change', type: 'string' }
+                        { required: true, message: '请选择身份证类型', trigger: 'change', type: 'string' }
                     ],
                     studentID: [
                         { required: true, message: '请填写身份证件号码', trigger: 'change', type: 'string' },

@@ -119,7 +119,7 @@
                     hasDoubleGirls: '02',            //    是否双女户
                     cityStudentNumber: '',           //    市学籍
 
-                    isPre: '01',                     //    区分在校学生和未注册学籍的学生
+                    isPre: '02',                     //    区分在校学生和未注册学籍的学生
                 },
             }
         },
@@ -131,13 +131,14 @@
             readExcel(file) {
                 const fileReader = new FileReader();
                 fileReader.onload = (ev) => {
+                    // alert("asasasas");
                     // try {
                         const data = ev.target.result;
                         const workbook = XLSX.read(data, {
                         type: 'binary'
                         });
                         // for (let sheet in workbook.Sheets) {
-                            const sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
+                            const sheetArray = XLSX.utils.sheet_to_json(workbook.Sheets["在校生信息"]);
                             // console.log(sheet);
                             // console.log(sheetArray);
                             for (let index in sheetArray) {
@@ -187,16 +188,13 @@
                     case "sexType":
                         return ("女" == value)?'02':'01';
                     break;
-                    case "birthDate"://430181198410263456
-                        var idStr = value;
-                        return idStr.substring(6, 10)+"-"+idStr.substring(10, 12)+"-"+idStr.substring(12, 14);
+                    case "brithPlaceCode":
+                    case "grandPlaceCode":
+                    case "householdPlaceCode":
+                    case "householdPlaceCode1":
+                    case "householdPlaceCode2":
+                        return this.codeFmt(value);
                     break;
-                    // case "brithPlaceCode":
-                    //     return this.codeFmt(value);
-                    // break;
-                    // case "grandPlaceCode":
-                    //     return this.codeFmt(value);
-                    // break;
                     case "ethnic":
                         return ("汉族" == value)?'01':this.basicFmt(this[data], value);
                     break;
@@ -249,18 +247,31 @@
                     break;
                 }
             },
-            codeFmt(textStr) {
-                return textStr;
-                // console.log("reach this"+ textStr);
+            codeFmt(str) {
                 var returnStr = "";
-                // var codeArr = textStr;
-                // if ("string" == typeof(codeStr)) {
-                    // codeArr = codeStr.split(",");
-                // }
-                
-                returnStr = TextToCode[textStr];
-                console.log("reach this"+ returnStr);
-
+                if (typeof obj == "undefined" || obj == null || obj == "") {
+                    return returnStr;
+                }
+                let splitOnce = str.split("省");
+                if (TextToCode[splitOnce[0]+"省"]) {
+                    returnStr += TextToCode[splitOnce[0]+"省"].code + ",";
+                    
+                    if (typeof splitOnce[1] == "undefined" || splitOnce[1] == null || splitOnce[1] == "") {
+                        return returnStr;
+                    }
+                    let splitTwice = splitOnce[1].split("市");
+                    if (TextToCode[splitOnce[0]+"省"][splitTwice[0]+"市"]) {
+                        returnStr += TextToCode[splitOnce[0]+"省"][splitTwice[0]+"市"].code + ",";
+                        
+                        if (typeof splitTwice[1] == "undefined" || splitTwice[1] == null || splitTwice[1] == "") {
+                            return returnStr;
+                        }
+                        let splitThird = splitTwice[1].split("区");
+                        if (TextToCode[splitOnce[0]+"省"][splitTwice[0]+"市"][splitThird[0]+"区"]) {
+                            returnStr += TextToCode[splitOnce[0]+"省"][splitTwice[0]+"市"][splitThird[0]+"区"].code;
+                        }
+                    }
+                }
                 return returnStr;
             },
             basicFmt(classDatas, value) {
@@ -270,7 +281,11 @@
                         return obj.name === value
                     })
                     // console.log(result[0]);
-                return result[0].id;
+                if (result[0]) {
+                    return result[0].id;
+                } else {
+                    return value;
+                }
             },
             nationFmt(classDatas, key) {
                 var result = classDatas.filter(obj => {

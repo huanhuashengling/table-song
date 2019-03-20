@@ -15,12 +15,10 @@ export const exportStudentListFields = [
     },
     },
     { id: "1",  name: '春游', 
-        fields: {'classNum': 1, 
-                'grade': 1, 
-                'studentName': 1, 
-                'sexType': 1, 
-                'studentID': 1, 
-                'contactPhoneNumber': 1, },
+        fields: {'studentName': 1, 
+                'contactPhoneNumber': 1,
+                'contact1PhoneNumber': 1,
+                'contac21PhoneNumber': 1, },
         conditions: {
             'isPre': "02",
         },
@@ -57,6 +55,44 @@ export const exportStudentListFields = [
     conditions: {
         'isPre': "01",
     },
+    },
+    { id: "6",  name: '教育检测', 
+        fields: { 'studentName': 1, 
+                'sexType': 1, 
+                'birthDate': 1,
+                'grade': 1,
+                'classNum': 1, },
+    conditions: {
+        'isPre': "02",
+    },
+    },
+]
+export const exportTeacherListFields = [
+    { id: "0",  name: '春游', 
+        fields: { 'teacherName': 1,
+                'sexType': 1, 
+                'teacherID': 1,
+                'contactPhoneNumber': 1, },
+        conditions: {
+        },
+    },
+    { id: "1",  name: '教育监测', 
+        fields: {
+                'teacherName': 1, 
+                'sexType': 1, 
+                'birthDate': 1, 
+                'isClassLeader': 1, },
+        conditions: {
+        },
+    },
+    { id: "2",  name: '基础教育统计', 
+        fields: {
+                'teacherName': 1, 
+                'sexType': 1, 
+                'birthDate': 1, 
+                'isClassLeader': 1, },
+        conditions: {
+        },
     },
 ]
 //年级
@@ -367,6 +403,43 @@ export const nameDescDatas = [
     //------市学籍信息
     {"desc": "是否双女户", "name": "hasDoubleGirls", "data":"", },             
     {"desc": "市学籍", "name": "cityStudentNumber", "data":"", },   
+
+    {"desc": "学校标识码", "name": "schoolCode", "data":"", },   
+    {"desc": "所在学校", "name": "schoolName", "data":"", },   
+
+]
+
+export const teacherNameDescDatas = [
+    //------学生个人基本信息
+    {"desc": "姓名", "name": "teacherName", },                
+    {"desc": "性别", "name": "sexType", "data": "sexTypes",},                    
+    {"desc": "出生日期", "name": "birthDate", "data":"", },                       
+    {"desc": "民族", "name": "ethnic", "data": "ethnics",},                                
+    {"desc": "联系电话", "name": "contactPhoneNumber", "data":"", }, 
+    {"desc": "身份证件类型", "name": "IDType", "data": "IDTypes",},                          
+    {"desc": "身份证号码", "name": "teacherID", "data":"", },          
+    {"desc": "参加工作时间", "name": "startWorkDate", }, 
+    {"desc": "在本单位工作年限", "name": "thisWorkplaceYears", },                       
+    {"desc": "从教时间", "name": "startTeachDate", },                       
+    {"desc": "最高学历", "name": "highestEducation", },                       
+    {"desc": "个人身份", "name": "personalIdentity", },                       
+    {"desc": "政治面貌", "name": "politicalStatus", "data": "politicalStatuses",},                       
+    {"desc": "学位", "name": "degree", },                       
+    {"desc": "岗位等级", "name": "jobRank", },                       
+    {"desc": "评审通过时间", "name": "reviewPassDate", },                       
+    {"desc": "职称", "name": "jobTitle", },                       
+    {"desc": "职务", "name": "jobPosition", },                       
+    {"desc": "任教课程", "name": "position", },                       
+    {"desc": "毕业院校", "name": "graduatedSchool", },                       
+    {"desc": "所学专业", "name": "major", },                       
+    {"desc": "教师资格证编号", "name": "certificateCode", },                       
+    {"desc": "教师资格证学科", "name": "certificateSubject", },                       
+    {"desc": "普通话等级", "name": "mandarinLevel", },                       
+    {"desc": "哪个班的班主任", "name": "classTeacher", },                       
+    {"desc": "哪个学科组长", "name": "subjectLeader", },                       
+    {"desc": "哪个年级组长", "name": "gradeLeader", },                       
+    {"desc": "是否在编", "name": "isFormal", },                        
+    {"desc": "是否在岗", "name": "isOnPosition", },                        
 
     {"desc": "学校标识码", "name": "schoolCode", "data":"", },   
     {"desc": "所在学校", "name": "schoolName", "data":"", },   

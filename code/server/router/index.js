@@ -15,12 +15,20 @@ export default app => {
     router.get('/admin_demo_api/user/del', app.admin.user.del)
 
 
-    // 文章请求
+    // 学生信息请求
     router.get('/admin_demo_api/student/list', app.admin.student.list)
     router.get('/admin_demo_api/student/findOne', app.admin.student.findOne)
     router.post('/admin_demo_api/student/add', app.admin.student.add)
     router.post('/admin_demo_api/student/update', app.admin.student.update)
     router.get('/admin_demo_api/student/del', app.admin.student.del)
+
+
+    // 教师信息请求
+    router.get('/admin_demo_api/teacher/list', app.admin.teacher.list)
+    router.get('/admin_demo_api/teacher/findOne', app.admin.teacher.findOne)
+    router.post('/admin_demo_api/teacher/add', app.admin.teacher.add)
+    router.post('/admin_demo_api/teacher/update', app.admin.teacher.update)
+    router.get('/admin_demo_api/teacher/del', app.admin.teacher.del)
 
     // 其他请求
     router.post('/admin_demo_api/markdown_upload_img', app.admin.other.markdown_upload_img)
