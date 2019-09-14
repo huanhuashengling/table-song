@@ -145,7 +145,7 @@
                             // console.log(sheetArray);
                             for (let index in sheetArray) {
                                 this.createStudentInfo(sheetArray[index]);
-                                break;
+                                // break;
                             }
                         // }
                     // } catch (e) {
@@ -156,7 +156,7 @@
                 fileReader.readAsBinaryString(file.raw);
             },
             createStudentInfo (data) {
-                console.log(this.info);
+                // console.log(this.info);
                 let tInfo = JSON.parse(JSON.stringify(this.info));
                 for (let index in data) {
                     let value = data[index];
@@ -231,13 +231,13 @@
                     // break;
                 }
                 console.log(tInfo);
-                // try{
-                //     this.$store.dispatch('addStudent', tInfo);
-                //     this.loading = false
-                //     this.$router.push('/pre_student/list')
-                // }catch(e) {
-                //     this.loading = false
-                // }
+                try{
+                    this.$store.dispatch('addStudent', tInfo);
+                    this.loading = false
+                    this.$router.push('/pre_student/list')
+                }catch(e) {
+                    this.loading = false
+                }
             },
             codeFmt(str) {
                 var returnStr = "";

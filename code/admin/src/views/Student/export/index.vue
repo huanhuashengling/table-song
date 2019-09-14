@@ -69,7 +69,7 @@
                 exportField: 1,
                 exportRange: 2,
                 rules: {},
-                gradeArr: ['2018', '2017', '2016', '2015', '2014', '2013'],
+                gradeArr: ['2019', '2018', '2017', '2016', '2015', '2014'],
                 classArr: ['1', '2', '3', '4'],
                 keyword: '',
                 conditions: {},

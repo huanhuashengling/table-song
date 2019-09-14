@@ -78,7 +78,7 @@
                 cardShow: false,
 
                 loading: false,
-                studentName: '刘熙梓',                //1  姓名
+                studentName: '丁皓轩',                //1  姓名
                 sexType: '',                    //2  性别
                 birthDate: '',                  //3  出生日期    不显示  从身份证获取
                 brithPlaceCode: [],             //4  出生地
@@ -100,10 +100,10 @@
                 keeper2Name: '',                //61  监护人2姓名
                 relation2: '02',                //62  监护人2关系
                 contact2PhoneNumber: '',        //68  监护人2联系电话
-                schoolName: '长沙市芙蓉区燕山小学',
-                schoolCode: '2143019582',
+                schoolName: '长沙市芙蓉区东晖小学',
+                schoolCode: '2143017771',
                 info: {
-                    studentName: '刘熙梓',                //1  姓名
+                    studentName: '丁皓轩',                //1  姓名
                     grade: '',             //22  年级        默认
                     classNum: '',                   //23  班级        默认空
                 },
@@ -157,7 +157,7 @@
                 this.notMainland = this.basicFmt(this.notMainlands, studentInfo["notMainland"]);
                 this.IDType = this.basicFmt(this.IDTypes, studentInfo["IDType"]);
                 this.studentID = studentInfo["studentID"];
-                this.householdPlaceCode = studentInfo["householdPlaceCode"];
+                this.householdPlaceCode = this.codeFmt(studentInfo["householdPlaceCode"]);
                 this.usedName = studentInfo["usedName"];
                 this.nationalStudentNumber = studentInfo["nationalStudentNumber"];
                 this.grade = studentInfo["grade"];
@@ -241,18 +241,17 @@
                     break;
                 }
             },
-            codeFmt(textStr) {
-                return textStr;
-                // console.log("reach this"+ textStr);
+            codeFmt(codeStr) {
                 var returnStr = "";
-                // var codeArr = textStr;
-                // if ("string" == typeof(codeStr)) {
-                    // codeArr = codeStr.split(",");
-                // }
+                var codeArr = codeStr;
+                if ("string" == typeof(codeStr)) {
+                    codeArr = codeStr.split(",");
+                }
                 
-                returnStr = TextToCode[textStr];
-                console.log("reach this"+ returnStr);
-
+                for (let index = 0; index < codeArr.length; index++) {
+                    var tStr = CodeToText[codeArr[index]];
+                    returnStr += ("全部" == tStr)?"":tStr;
+                }
                 return returnStr;
             },
             basicFmt(classDatas, value) {

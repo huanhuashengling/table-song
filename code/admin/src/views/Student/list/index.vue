@@ -3,13 +3,16 @@
     <div class="search">
         <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="keyword" @keydown.enter.native="getStudentList"></el-input>
         <el-button type="primary" icon="el-icon-search" :loading="loading" @click="getStudentList">搜索</el-button>
+
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel">导出在校数据</el-button>
+        <el-button type="primary" icon="el-icon-delete" :loading="loading" @click="clearStudentData">清空在校数据</el-button>
     </div>
     <div class="export">
-        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel">导出</el-button>
+        
     </div>
-    <el-table ref="multipleTable" id="student-list" :data="studentList" tooltip-effect="dark" stripe border>
+    <el-table ref="multipleTable" id="student-list" :data="studentList" tooltip-effect="dark" @sort-change="changeSort" :default-sort="{prop: 'studentName', order: 'ascending'}" stripe border>
         <el-table-column show-overflow-tooltip type="index" width="55" align="center" header-align="center" :index="increment"></el-table-column>
-        <el-table-column show-overflow-tooltip v-if="!item.hidden && !item.filters && !item.format" v-for="(item, index) in headerOptions" :key="index" :label="item.label" :prop="item.prop" :header-align="item.headerAlign || 'center'" :align="item.align || 'center'" :sortable="item.sort || false"  :min-width="item.minWidth || 150">
+        <el-table-column show-overflow-tooltip  v-if="!item.hidden && !item.filters && !item.format" v-for="(item, index) in headerOptions" :key="index" :label="item.label" :prop="item.prop" sortable :sort-orders="['ascending', 'descending']" :header-align="item.headerAlign || 'center'" :align="item.align || 'center'" :sortable="item.sort || false"  :min-width="item.minWidth || 150">
             <template slot-scope="scope">
                 <div>{{scope.row[scope.column.property] || '无'}}</div>
             </template>
@@ -142,7 +145,8 @@
                 }
                 
                 for (let index = 0; index < codeArr.length; index++) {
-                    returnStr += CodeToText[codeArr[index]];
+                    var tStr = CodeToText[codeArr[index]];
+                    returnStr += ("全部" == tStr)?"":tStr;
                 }
                 return returnStr;
             },
@@ -224,24 +228,23 @@
                       cancelButtonText: '取消',
                       type: 'warning',
                       center: true
-                    }).then(async () => {
-                        try {
-                    await this.$store.dispatch('delStudent', scope.row._id)
-                    this.studentList.splice(scope.$index, 1)
-                }catch(e) {
+                }).then(async () => {
+                    try {
+                        await this.$store.dispatch('delStudent', scope.row._id)
+                        this.studentList.splice(scope.$index, 1)
+                    }catch(e) {
 
-                }
-                      this.$message({
+                    }
+                    this.$message({
                         type: 'success',
                         message: '删除成功!'
-                      });
-                    }).catch(() => {
-                      this.$message({
+                    });
+                }).catch(() => {
+                    this.$message({
                         type: 'info',
                         message: '已取消删除'
-                      });
                     });
-                
+                });
             },
             edit (scope) {
                 console.log(scope.row)
@@ -268,6 +271,33 @@
                 } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
                 return wbout
             },
+            clearStudentData() {
+                this.$confirm('将清空所有在校生的信息, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(async () => {
+                    try {
+                        await this.$store.dispatch('delAllStudents')
+                        // this.studentList.splice(scope.$index, 1)
+                    }catch(e) {
+
+                    }
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            changeSort (val) {
+                console.log(val);
+            }
         },
         computed: {
             ...mapGetters([

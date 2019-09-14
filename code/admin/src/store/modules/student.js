@@ -89,6 +89,16 @@ const music = {
 					})
 			})
 		},
+		delAllStudents ({commit}) {
+			return new Promise( (resolve, reject) => {
+				axios.get('student/delAll')
+					.then( res => {
+						resolve(res)
+					}).catch( err => {
+						reject(err)
+					})
+			})
+		},
 		updateStudent ({commit}, info) {
 			return new Promise( (resolve, reject) => {
 				axios.postFile('student/update', info)

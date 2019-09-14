@@ -21,6 +21,7 @@ export default app => {
     router.post('/admin_demo_api/student/add', app.admin.student.add)
     router.post('/admin_demo_api/student/update', app.admin.student.update)
     router.get('/admin_demo_api/student/del', app.admin.student.del)
+    // router.get('/admin_demo_api/student/delAll', app.admin.student.delAll)
 
 
     // 教师信息请求

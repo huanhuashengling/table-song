@@ -21,6 +21,12 @@
             上传文件
         </el-button>
     </el-upload>
+    <p>1. 导出全国学籍名单</p>
+    <p>2. 核对名单，弄清楚人数</p>
+    <p>3. 直接将导出的原生字段信息导入到系统</p>
+    <p>4. 导出家庭成员信息，和之前的连接上，这一点还没有做，但前几步基本可以获得所有的信息了</p>
+
+    <p></p>
 </article>
 </template>
 <script>
@@ -162,10 +168,38 @@
                         return obj.desc === index
                     })
                     if (result[0]) {
-                        // console.log(result[0].name);
+                        // console.log(result);
                         // console.log(index);
                         // console.log(data[index]);
-                        tInfo[result[0].name] = this.anyFmt(result[0].name, data[index], result[0].data);
+                        switch (result[0].name) {
+                            case "familyNames":
+                                tInfo["keeper1Name"] = this.anyFmt("keeper1Name", data[index].split(",")[0], "");
+                                tInfo["keeper2Name"] = this.anyFmt("keeper2Name", data[index].split(",")[1], "");
+                                break;
+                            case "familyRelations":
+                                tInfo["relation1"] = this.anyFmt("relation1", data[index].split(",")[0], "relations");
+                                tInfo["relation2"] = this.anyFmt("relation2", data[index].split(",")[1], "relations");
+                                break;
+                            case "familyWorkPlaces":
+                                tInfo["keeper1Workplace"] = this.anyFmt("keeper1Workplace", data[index].split(",")[0], "");
+                                tInfo["keeper2Workplace"] = this.anyFmt("keeper2Workplace", data[index].split(",")[1], "");
+                                break;
+                            case "familyAddreses":
+                                tInfo["address1"] = this.anyFmt("address1", data[index].split(",")[0], "");
+                                tInfo["address2"] = this.anyFmt("address2", data[index].split(",")[1], "");
+                                break;
+                            case "familyHouseholdPlaces":
+                                tInfo["householdPlaceCode1"] = this.anyFmt("householdPlaceCode1", data[index].split(",")[0], "");
+                                tInfo["householdPlaceCode2"] = this.anyFmt("householdPlaceCode2", data[index].split(",")[1], "");
+                                break;
+                            case "familyPhones":
+                                tInfo["contact1PhoneNumber"] = this.anyFmt("contact1PhoneNumber", data[index].split(",")[0], "");
+                                tInfo["contact2PhoneNumber"] = this.anyFmt("contact2PhoneNumber", data[index].split(",")[1], "");
+                                break;
+                            default:
+                                tInfo[result[0].name] = this.anyFmt(result[0].name, data[index], result[0].data);
+                            break;
+                        }
                         // if ("leftChildrenType" == result[0].name)
                         // {
                         //     break;
@@ -249,9 +283,10 @@
             },
             codeFmt(str) {
                 var returnStr = "";
-                if (typeof obj == "undefined" || obj == null || obj == "") {
+                if (typeof str == "undefined" || str == null || str == "") {
                     return returnStr;
                 }
+
                 let splitOnce = str.split("省");
                 if (TextToCode[splitOnce[0]+"省"]) {
                     returnStr += TextToCode[splitOnce[0]+"省"].code + ",";
@@ -259,6 +294,7 @@
                     if (typeof splitOnce[1] == "undefined" || splitOnce[1] == null || splitOnce[1] == "") {
                         return returnStr;
                     }
+
                     let splitTwice = splitOnce[1].split("市");
                     if (TextToCode[splitOnce[0]+"省"][splitTwice[0]+"市"]) {
                         returnStr += TextToCode[splitOnce[0]+"省"][splitTwice[0]+"市"].code + ",";
@@ -266,6 +302,7 @@
                         if (typeof splitTwice[1] == "undefined" || splitTwice[1] == null || splitTwice[1] == "") {
                             return returnStr;
                         }
+
                         let splitThird = splitTwice[1].split("区");
                         if (TextToCode[splitOnce[0]+"省"][splitTwice[0]+"市"][splitThird[0]+"区"]) {
                             returnStr += TextToCode[splitOnce[0]+"省"][splitTwice[0]+"市"][splitThird[0]+"区"].code;

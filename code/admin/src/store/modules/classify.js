@@ -6,9 +6,8 @@ export const exportStudentListFields = [
                 'grade': 1, 
                 'studentName': 1, 
                 'sexType': 1, 
-                'familyAddress': 1, 
-                'keeper1Name': 1, 
-                'keeper2Name': 1, 
+                'birthDate': 1, 
+                'ethnic': 1, 
                 'contactPhoneNumber': 1, },
     conditions: {
         'isPre': "02",
@@ -16,9 +15,10 @@ export const exportStudentListFields = [
     },
     { id: "1",  name: '春游', 
         fields: {'studentName': 1, 
-                'contactPhoneNumber': 1,
-                'contact1PhoneNumber': 1,
-                'contac21PhoneNumber': 1, },
+                'sexType': 1,
+                'brithDate': 1,
+                'grade': 1,
+                'classNum': 1, },
         conditions: {
             'isPre': "02",
         },
@@ -56,7 +56,7 @@ export const exportStudentListFields = [
         'isPre': "01",
     },
     },
-    { id: "6",  name: '教育检测', 
+    { id: "6",  name: '教育监测', 
         fields: { 'studentName': 1, 
                 'sexType': 1, 
                 'birthDate': 1,
@@ -97,19 +97,19 @@ export const exportTeacherListFields = [
 ]
 //年级
 export const gradeDescs = [
-    { id: "01",  enterYear: '2018', label:"一" },
-    { id: "02",  enterYear: '2017', label:"二" },
-    { id: "03",  enterYear: '2016', label:"三" },
-    { id: "04",  enterYear: '2015', label:"四" },
-    { id: "05",  enterYear: '2014', label:"五" },
-    { id: "06",  enterYear: '2013', label:"六" },
+    { id: "01",  enterYear: '2019', label:"一" },
+    { id: "01",  enterYear: '2018', label:"二" },
+    { id: "02",  enterYear: '2017', label:"三" },
+    { id: "03",  enterYear: '2016', label:"四" },
+    { id: "04",  enterYear: '2015', label:"五" },
+    { id: "05",  enterYear: '2014', label:"六" },
 ]
 //班级
 export const classDescs = [
-    { id: "01",  bigLabel: '甲', label:"1" },
-    { id: "02",  bigLabel: '乙', label:"2" },
-    { id: "03",  bigLabel: '丙', label:"3" },
-    { id: "04",  bigLabel: '丁', label:"4" },
+    { id: "01",  bigLabel: '1', label:"1" },
+    { id: "02",  bigLabel: '2', label:"2" },
+    { id: "03",  bigLabel: '3', label:"3" },
+    { id: "04",  bigLabel: '4', label:"4" },
 ]
 //新生类别
 export const applyTypes = [
@@ -372,7 +372,14 @@ export const nameDescDatas = [
     //------学生上下学交通方式
     {"desc": "上下学距离", "name": "distance", "data":"", },                   
     {"desc": "交通方式", "name": "vehicle", "data": "vehicles",},                    
-    {"desc": "是否需要校车", "name": "schoolbus", "data": "switchStates",},                 
+    {"desc": "是否需要校车", "name": "schoolbus", "data": "switchStates",},  
+    //-------导出表格原生信息
+    {"desc": "家庭成员姓名", "name": "familyNames", "data":"", },                
+    {"desc": "家庭成员关系", "name": "familyRelations", "data":"", },                
+    {"desc": "家庭成员工作单位", "name": "familyWorkPlaces", "data":"", },                
+    {"desc": "家庭成员现住址", "name": "familyAddreses", "data":"", },                
+    {"desc": "家庭成员户口所在地", "name": "familyHouseholdPlaces", "data":"", },                
+    {"desc": "家庭成员联系电话", "name": "familyPhones", "data":"", },                
     //-------学生家庭成员或监护人信息一
     {"desc": "监护人1姓名", "name": "keeper1Name", "data":"", },                
     {"desc": "监护人1关系", "name": "relation1", "data": "relations",},                  

@@ -44,6 +44,7 @@ export const asyncRouterMap = [
             { path: 'import', component: _import_('PreStudent/import/index'), name: '市招生信息导入' },
             { path: 'add', component: _import_('PreStudent/add/index'), name: '添加学生学籍' },
             { path: 'export', component: _import_('PreStudent/export/index'), name: '导出注册学籍' },
+            { path: 'camera', component: _import_('PreStudent/camera/index'), name: '在线拍照' },
         ]
     },
     {
@@ -58,6 +59,7 @@ export const asyncRouterMap = [
             { path: 'import', component: _import_('Student/import/index'), name: '在校学籍导入' },
             { path: 'export', component: _import_('Student/export/index'), name: '在校学籍导出' },
             { path: 'card', component: _import_('Student/card/index'), name: '打印学籍卡片' },
+            { path: 'photo', component: _import_('Student/photo/index'), name: '学生照片导入' },
         ]
     },
     {
