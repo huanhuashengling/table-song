@@ -1,5 +1,7 @@
 import db from '../mongodb'
 let studentSchema = db.Schema({
+    schoolName: String,                 //学校名称
+    schoolCode: String,                 //学校标识码
     //------学生个人基本信息
     studentName: String,                //1  姓名
     sexType: String,                    //2  性别

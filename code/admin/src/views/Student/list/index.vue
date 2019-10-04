@@ -209,10 +209,12 @@
             },
             async getStudentList () {
                 this.loading = true;
+                let conditions = this.exportStudentListFields[4].conditions;
+                conditions.schoolCode = this.schoolCode;
                 try {
                     await this.$store.dispatch('getStudentList', {
                         keyword: this.keyword,
-                        conditions: this.exportStudentListFields[4].conditions,
+                        conditions: conditions,
                         fields: this.exportStudentListFields[4].fields,
                         pageindex: this.pageindex,
                         pagesize: this.pagesize
@@ -279,8 +281,8 @@
                     center: true
                 }).then(async () => {
                     try {
-                        await this.$store.dispatch('delAllStudents')
-                        // this.studentList.splice(scope.$index, 1)
+                        await this.$store.dispatch('delAllStudents', this.schoolCode)
+                        // this.studentList = [];
                     }catch(e) {
 
                     }
@@ -308,6 +310,7 @@
                 'nations',
                 'relations',
                 'exportStudentListFields',
+                'schoolCode',
             ])
         }
     }

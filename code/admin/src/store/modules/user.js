@@ -9,6 +9,8 @@ const user = {
 		userTotal: 0,
 		name: '',
 		username: '',
+		schoolName: '',
+		schoolCode: '',
 		roles: null,
 		token: getToken(),
 		otherList: []
@@ -19,6 +21,8 @@ const user = {
 		},
 		SET_USERINFO (state, info) {
 			state.name = info.name;
+			state.schoolName = info.schoolName;
+			state.schoolCode = info.schoolCode;
 			state.username = info.username;
 			state.roles = info.roles;
 		},
@@ -46,7 +50,7 @@ const user = {
 					username: username,
 					pwd: md5(pwd)
 				}).then( res => {
-					// console.log(res)
+					console.log(res)
 					state.token = getToken();
 					resolve(res)
 				}).catch( err => {

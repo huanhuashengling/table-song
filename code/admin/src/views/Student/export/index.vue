@@ -177,6 +177,7 @@
                     break;
                     case "brithPlaceCode":
                     case "grandPlaceCode":
+                    case "householdPlaceCode":
                     case "householdPlaceCode1":
                     case "householdPlaceCode2":
                         return this.codeFmt(value);
@@ -218,6 +219,30 @@
                     case "enjoyHelp":
                         return ("01" == value)?'是':'否';
                     break;
+                    case "grade":
+                        switch(value) {
+                            case "小学2014级": return "小学六年级";
+                            case "小学2015级": return "小学五年级";
+                            case "小学2016级": return "小学四年级";
+                            case "小学2017级": return "小学三年级";
+                            case "小学2018级": return "小学二年级";
+                            case "小学2019级": return "小学一年级";
+                            default: return value;
+                        }
+                        break;
+                    case "classNum":
+                        switch(value.substr(0, 7)) {
+                            case "小学2014级": return "六年" + this.changeNumToBig(value.substr(7, 1)) + value.substr(8, 1);
+                            case "小学2015级": return "五年" + this.changeNumToBig(value.substr(7, 1)) + value.substr(8, 1);
+                            case "小学2016级": return "四年" + this.changeNumToBig(value.substr(7, 1)) + value.substr(8, 1);
+                            case "小学2017级": return "三年" + this.changeNumToBig(value.substr(7, 1)) + value.substr(8, 1);
+                            case "小学2018级": return "二年" + this.changeNumToBig(value.substr(7, 1)) + value.substr(8, 1);
+                            case "小学2019级": return "一年" + this.changeNumToBig(value.substr(7, 1)) + value.substr(8, 1);
+                            default:
+                                return value;
+                                break;
+                        }
+                        break;
                     default:
                     if(typeof value=="string"){
                         return value.replace(/\s+/g,"");
@@ -227,18 +252,38 @@
                     break;
                 }
             },
-            codeFmt(textStr) {
-                return textStr;
-                // console.log("reach this"+ textStr);
+            codeFmt(codeStr) {
                 var returnStr = "";
-                // var codeArr = textStr;
-                // if ("string" == typeof(codeStr)) {
-                    // codeArr = codeStr.split(",");
-                // }
+                var codeArr = codeStr;
+                if ("string" == typeof(codeStr)) {
+                    codeArr = codeStr.split(",");
+                }
+                if (codeArr[0]) {
+                    if ("湖南省" == CodeToText[codeArr[0]]) {
+                        if(codeArr[1]) {
+                            if(codeArr[2]) {
+                                returnStr = CodeToText[codeArr[1]]+","+CodeToText[codeArr[2]];
+                            } else {
+                                returnStr = CodeToText[codeArr[1]]+",-";
+                            }
+                        } else {
+                            returnStr = "长沙市,芙蓉区";
+                        }
+                    } else {
+                        if(codeArr[1]) {
+                            returnStr = "外省," + CodeToText[codeArr[0]];
+                        } else {
+                            returnStr = "外省,湖北省";
+                        }
+                    }
+                } else {
+                    returnStr = "长沙市,芙蓉区";
+                }
                 
-                returnStr = TextToCode[textStr];
-                console.log("reach this"+ returnStr);
-
+                // for (let index = 0; index < codeArr.length; index++) {
+                //     var tStr = CodeToText[codeArr[index]];
+                //     returnStr += ("全部" == tStr)?"":tStr;
+                // }
                 return returnStr;
             },
             basicFmt(classDatas, value) {
@@ -301,28 +346,38 @@
                 
             },
             exportSchool() {
+                let conditions = this.exportStudentListFields[this.exportField].conditions;
+                conditions.schoolCode = this.schoolCode;
+
                 this.keyword = "";
                 this.fields = this.exportStudentListFields[this.exportField].fields;
-                this.conditions = this.exportStudentListFields[this.exportField].conditions;
+                this.conditions = conditions;
                 this.pagesize = 1200;
-                this.filename = "燕山小学全校花名册";
+                this.filename = this.schoolName + "全校花名册";
                 this.exportExcel();
             },
             exportGrade(gradeItem) {
+                let conditions = this.exportStudentListFields[this.exportField].conditions;
+                conditions.schoolCode = this.schoolCode;
+                conditions.grade = "小学" + gradeItem.enterYear + "级";
+
                 this.keyword = "";
                 this.fields = this.exportStudentListFields[this.exportField].fields;
-                this.conditions = this.exportStudentListFields[this.exportField].conditions;
+                this.conditions = conditions;
                 this.pagesize = 220;
-                this.conditions["grade"] = "小学" + gradeItem.enterYear + "级";
-                this.filename = "小学" + gradeItem.enterYear + "级花名册";
+                this.filename = this.schoolName + gradeItem.enterYear + "级花名册";
                 this.exportExcel();
             },
             exportClass(gradeItem, classItem) {
+                let conditions = this.exportStudentListFields[this.exportField].conditions;
+                conditions.schoolCode = this.schoolCode;
+                conditions.classNum = "小学" + gradeItem.enterYear + "级" + classItem.label + "班";
+
                 this.keyword = "";
                 this.pagesize = 60;
                 this.fields = this.exportStudentListFields[this.exportField].fields;
-                this.conditions["classNum"] = "小学" + gradeItem.enterYear + "级" + classItem.label + "班";
-                this.filename = "小学" + gradeItem.enterYear + "级" + classItem.label + "班班级花名册";
+                this.conditions = conditions;
+                this.filename = this.schoolName + gradeItem.enterYear + "级" + classItem.label + "班班级花名册";
                 this.exportExcel();
             },
             async exportExcel () {
@@ -331,8 +386,10 @@
                 var num = 1;
                 for (let index in this.studentList) {
                     // console.log(this.studentList[index]["studentName"]);
-                    data.push(this.fmtOneStudent(this.studentList[index], num));
-                    num++;
+                    // if("431322201002250289" == this.studentList[index]["studentID"]) {
+                        data.push(this.fmtOneStudent(this.studentList[index], num));
+                        num++;
+                    // }
                     // break;
                 }
                 // console.log(data);
@@ -345,6 +402,17 @@
 
                 /* 生成xlsx文件 */
                 XLSX.writeFile(wb, this.filename+".xlsx");
+            },
+            changeNumToBig(value){
+                switch(value) {
+                    case "1": return "一";
+                    case "2": return "二";
+                    case "3": return "三";
+                    case "4": return "四";
+                    case "5": return "五";
+                    case "6": return "六";
+                    default: return value;
+                }
             },
             fmtOneStudent (studentInfo, order) {
                 //班级 姓名 家长姓名 联系方式  现住址
@@ -389,6 +457,8 @@
                 'mainstreams',
                 'nameDescDatas',
                 'exportStudentListFields',
+                'schoolName',
+                'schoolCode',
             ])
         }
     }

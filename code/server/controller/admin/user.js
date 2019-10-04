@@ -20,6 +20,8 @@ module.exports = {
             let payload = {
                 _id: data._id,
                 username: data.username,
+                schoolName: data.schoolName,
+                schoolCode: data.schoolCode,
                 name: data.name,
                 roles: data.roles
             }
@@ -45,8 +47,11 @@ module.exports = {
         try {
             let tokenInfo = jwt.verify(token, conf.auth.admin_secret);
             console.log(tokenInfo)
+
             ctx.send({
                 username: tokenInfo.username,
+                schoolName: tokenInfo.schoolName,
+                schoolCode: tokenInfo.schoolCode,
                 name: tokenInfo.name,
                 _id: tokenInfo._id,
                 roles: tokenInfo.roles

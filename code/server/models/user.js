@@ -1,6 +1,8 @@
 import db from '../mongodb'
 let userSchema = db.Schema({
     username: String,
+    schoolName: String,
+    schoolCode: String,
     pwd: String,
     name: String,
     avatar: String,

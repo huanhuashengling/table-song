@@ -43,6 +43,8 @@
                 conditions: {},
                 //------学生个人基本信息
                 info: {
+                    schoolName: '',                //学校名称
+                    schoolCode: '',                //学校标识码
                     //------学生个人基本信息
                     studentName: '',                //1  姓名
                     sexType: '',                    //2  性别
@@ -169,8 +171,7 @@
                     })
                     if (result[0]) {
                         // console.log(result);
-                        // console.log(index);
-                        // console.log(data[index]);
+                        
                         switch (result[0].name) {
                             case "familyNames":
                                 tInfo["keeper1Name"] = this.anyFmt("keeper1Name", data[index].split(",")[0], "");
@@ -195,6 +196,22 @@
                             case "familyPhones":
                                 tInfo["contact1PhoneNumber"] = this.anyFmt("contact1PhoneNumber", data[index].split(",")[0], "");
                                 tInfo["contact2PhoneNumber"] = this.anyFmt("contact2PhoneNumber", data[index].split(",")[1], "");
+                                break;
+                            case "householdPlaceCode":
+                                var tStudentID = "";
+                                if (data["身份证件号"]) {
+                                    tStudentID = data["身份证件号"].trim();
+                                }
+                                if (tStudentID.length < 18) {
+                                    tInfo["householdPlaceCode"] = "430000,430100,430102";
+                                } else {
+                                    var pCode = tStudentID.substr(0, 2) + "0000";
+                                    var cCode = tStudentID.substr(0, 4) + "00";
+                                    var aCode = tStudentID.substr(0, 6);
+
+                                    tInfo["householdPlaceCode"] = pCode + "," + cCode + "," + aCode;
+                                }
+                                
                                 break;
                             default:
                                 tInfo[result[0].name] = this.anyFmt(result[0].name, data[index], result[0].data);

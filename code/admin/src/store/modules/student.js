@@ -89,9 +89,9 @@ const music = {
 					})
 			})
 		},
-		delAllStudents ({commit}) {
+		delAllStudents ({commit}, schoolCode) {
 			return new Promise( (resolve, reject) => {
-				axios.get('student/delAll')
+				axios.get('student/delAll', {schoolCode: schoolCode})
 					.then( res => {
 						resolve(res)
 					}).catch( err => {

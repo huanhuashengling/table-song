@@ -38,7 +38,7 @@ export const exportStudentListFields = [
                 'contactPhoneNumber': 1, },
     conditions: {
         'isPre': "02",
-    },
+        },
     },
     { id: "4",  name: '在校生全部信息', 
     fields:{'_id': 0, 
@@ -46,7 +46,8 @@ export const exportStudentListFields = [
             'createTime': 0, }, 
     conditions: {
         'isPre': "02",
-    },
+        'schoolCode': "",
+        },
     },
     { id: "5",  name: '新生学籍信息', 
     fields:{'_id': 0, 
@@ -54,7 +55,7 @@ export const exportStudentListFields = [
             'createTime': 0, }, 
     conditions: {
         'isPre': "01",
-    },
+        },
     },
     { id: "6",  name: '教育监测', 
         fields: { 'studentName': 1, 
@@ -64,7 +65,23 @@ export const exportStudentListFields = [
                 'classNum': 1, },
     conditions: {
         'isPre': "02",
+        },
     },
+    { id: "7",  name: '教育统计', 
+        fields: {'schoolName': 1,
+                'schoolCode': 1, 
+                'studentName': 1, 
+                'studentID': 1,
+                'nationalStudentNumber': 1,
+                'classNum': 1,
+                'birthDate': 1,
+                'sexType': 1,
+                'grade': 1,
+                'ethnic': 1,
+                'householdPlaceCode': 1, },
+    conditions: {
+        'isPre': "02",
+        },
     },
 ]
 export const exportTeacherListFields = [
@@ -322,6 +339,9 @@ export const ethnics = [
 ]
 
 export const nameDescDatas = [
+    {"desc": "学校名称", "name": "schoolName", },                
+    {"desc": "学校标识码", "name": "schoolCode", },                
+
     //------学生个人基本信息
     {"desc": "学生姓名", "name": "studentName", },                
     {"desc": "性别", "name": "sexType", "data": "sexTypes",},                    

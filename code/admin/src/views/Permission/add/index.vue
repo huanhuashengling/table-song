@@ -12,6 +12,12 @@
             <el-form-item label="密码" prop="pwd">
                 <el-input type="password" v-model="info.pwd"></el-input>
             </el-form-item>
+            <el-form-item label="学校名称" prop="schoolName">
+                <el-input type="text" v-model="info.schoolName"></el-input>
+            </el-form-item>
+            <el-form-item label="学校标识码" prop="schoolCode">
+                <el-input type="text" v-model="info.schoolCode"></el-input>
+            </el-form-item>
             <el-form-item label="权限" prop="roles">
                 <!-- <el-input type="textarea" v-model="info.roles"></el-input> -->
                 <el-select v-model="info.roles" multiple placeholder="请选择" class="block">
@@ -39,6 +45,8 @@
                     name: '',
                     username: '',
                     pwd: '',
+                    schoolName: '',
+                    schoolCode: '',
                     avatar: '',
                     roles: ['default']
                 },
@@ -56,6 +64,12 @@
                     ],
                     pwd: [
                         { required: true, message: '请填写密码', trigger: 'blur' }
+                    ],
+                    schoolName: [
+                        { required: true, message: '请填写学校名称', trigger: 'blur' }
+                    ],
+                    schoolCode: [
+                        { required: true, message: '请填写学校标识码', trigger: 'blur' }
                     ],
                     roles: [
                         { required: true, message: '请选择权限', trigger: 'change', type: 'array' }

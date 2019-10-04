@@ -2,6 +2,8 @@ const getters = {
     sources: state => state.app.sources,
 
     userName: state => state.user.name,
+    schoolName: state => state.user.schoolName,
+    schoolCode: state => state.user.schoolCode,
     userList: state =>state.user.list,
     userTotal: state =>state.user.total,
 

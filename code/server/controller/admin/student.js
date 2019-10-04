@@ -24,7 +24,7 @@ module.exports = {
         // let { keyword, conditions = {"classNum": "小学2015级1班"}, pageindex = 1, pagesize = 10, fields = {"grade": "1", "classNum": "1", "studentName": "1", "sexType": "1"}} = ctx.request.query;
         console.log('pageindex:'+pageindex +','+ 'pagesize:'+pagesize)
         // console.log(JSON.parse(fields))
-        // console.log(JSON.parse(conditions))
+        console.log(JSON.parse(conditions))
         try {
             let data = await ctx.findPage(studentModel, 
                                         JSON.parse(conditions), 
@@ -91,6 +91,17 @@ module.exports = {
         let id = ctx.request.query.id
         try {
             ctx.remove(studentModel, {_id: id})
+            ctx.send()
+        }catch(e){
+            ctx.sendError(e)
+        }
+    },
+
+    async delAll (ctx, next) {
+        console.log('----------------删除学生学籍 student/delAll-----------------------');
+        let schoolCode = ctx.request.query.schoolCode
+        try {
+            ctx.remove(studentModel, {schoolCode: schoolCode})
             ctx.send()
         }catch(e){
             ctx.sendError(e)
