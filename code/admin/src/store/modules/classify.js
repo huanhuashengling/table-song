@@ -112,22 +112,6 @@ export const exportTeacherListFields = [
         },
     },
 ]
-//年级
-export const gradeDescs = [
-    { id: "01",  enterYear: '2019', label:"一" },
-    { id: "01",  enterYear: '2018', label:"二" },
-    { id: "02",  enterYear: '2017', label:"三" },
-    { id: "03",  enterYear: '2016', label:"四" },
-    { id: "04",  enterYear: '2015', label:"五" },
-    { id: "05",  enterYear: '2014', label:"六" },
-]
-//班级
-export const classDescs = [
-    { id: "01",  bigLabel: '1', label:"1" },
-    { id: "02",  bigLabel: '2', label:"2" },
-    { id: "03",  bigLabel: '3', label:"3" },
-    { id: "04",  bigLabel: '4', label:"4" },
-]
 //新生类别
 export const applyTypes = [
     { id: "01",  name: '有房有户' },

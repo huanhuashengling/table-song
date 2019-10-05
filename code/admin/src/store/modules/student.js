@@ -68,7 +68,7 @@ const music = {
 		},
 
 		getStudentList ({commit}, params) {
-			// console.log(params);
+			console.log(params);
 			return new Promise( (resolve, reject) => {
 				axios.get('student/list', params)
 					.then( res => {
@@ -108,7 +108,17 @@ const music = {
 						reject(err)
 					})
 			})
-		}
+		},
+		aggregate ({commit}, info) {
+			return new Promise( (resolve, reject) => {
+				axios.get('student/aggregate', info)
+					.then( res => {
+						resolve(res)
+					}).catch( err => {
+						reject(err)
+					})
+			})
+		},
 	}
 }
 export default music

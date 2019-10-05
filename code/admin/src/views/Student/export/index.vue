@@ -34,13 +34,11 @@
   <template v-if="showAll">
         <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportSchool()">全校花名册导出</el-button>
   </template>
-  <template v-if="showGrade" v-for="gradeItem in gradeDescs">
-        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportGrade(gradeItem)">{{ gradeItem.label }}年级花名册导出</el-button>
+  <template v-if="showGrade" v-for="gradeItem in this.gradeData.data">
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportGrade(gradeItem)">{{ gradeItem._id }}({{ gradeItem.total }})</el-button>
   </template>
-  <template v-if="showClass" v-for="gradeItem in gradeDescs">
-    <template v-for="classItem in classDescs">
-        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportClass(gradeItem, classItem)">{{ gradeItem.label }}{{ classItem.bigLabel }}班花名册导出</el-button>
-    </template>
+  <template v-if="showClass" v-for="classItem in this.classData.data">
+        <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportClass(classItem)">{{ classItem._id }}({{ classItem.total }})</el-button>
   </template>
     <!-- <div class="export">
         <el-button type="primary" icon="el-icon-download" :loading="loading" @click="exportExcel">导出</el-button>
@@ -62,6 +60,8 @@
                     grade: '',             //22  年级        默认
                     classNum: '',                   //23  班级        默认空
                 },
+                classData: {},
+                gradeData: {},
                 showAll: false,
                 showGrade: false,
                 showClass: false,
@@ -69,8 +69,6 @@
                 exportField: 1,
                 exportRange: 2,
                 rules: {},
-                gradeArr: ['2019', '2018', '2017', '2016', '2015', '2014'],
-                classArr: ['1', '2', '3', '4'],
                 keyword: '',
                 conditions: {},
                 filename: '',
@@ -126,6 +124,8 @@
         },
         mounted () {
             // this.getStudentList()
+            this.aggregateClassNum();
+            this.aggregateGrade();
         },
 
         methods: {
@@ -134,6 +134,14 @@
             },
             renderOneStudentCard() {
 
+            },
+            async aggregateClassNum() {
+                this.classData = await this.$store.dispatch('aggregate', {schoolCode: this.schoolCode, field: "classNum"});
+                // console.log(this.classData.data);
+            },
+            async aggregateGrade() {
+                this.gradeData = await this.$store.dispatch('aggregate', {schoolCode: this.schoolCode, field: "grade"});
+                // console.log(this.gradeData.data);
             },
             changeExportField() {
                 // console.log(this.exportField);
@@ -346,38 +354,30 @@
                 
             },
             exportSchool() {
-                let conditions = this.exportStudentListFields[this.exportField].conditions;
-                conditions.schoolCode = this.schoolCode;
-
                 this.keyword = "";
                 this.fields = this.exportStudentListFields[this.exportField].fields;
-                this.conditions = conditions;
+                this.conditions = {schoolCode: this.schoolCode, isPre: "02"};
                 this.pagesize = 1200;
-                this.filename = this.schoolName + "全校花名册";
+                this.filename = this.userName + "全校花名册";
                 this.exportExcel();
             },
             exportGrade(gradeItem) {
-                let conditions = this.exportStudentListFields[this.exportField].conditions;
-                conditions.schoolCode = this.schoolCode;
-                conditions.grade = "小学" + gradeItem.enterYear + "级";
+                let name = this.exportStudentListFields[this.exportField].name;
 
                 this.keyword = "";
                 this.fields = this.exportStudentListFields[this.exportField].fields;
-                this.conditions = conditions;
+                this.conditions = {schoolCode: this.schoolCode, grade: gradeItem._id, isPre: "02"};
                 this.pagesize = 220;
-                this.filename = this.schoolName + gradeItem.enterYear + "级花名册";
+                this.filename = this.userName + gradeItem._id + name;
                 this.exportExcel();
             },
-            exportClass(gradeItem, classItem) {
-                let conditions = this.exportStudentListFields[this.exportField].conditions;
-                conditions.schoolCode = this.schoolCode;
-                conditions.classNum = "小学" + gradeItem.enterYear + "级" + classItem.label + "班";
-
+            exportClass(classItem) {
+                let name = this.exportStudentListFields[this.exportField].name;
                 this.keyword = "";
                 this.pagesize = 60;
                 this.fields = this.exportStudentListFields[this.exportField].fields;
-                this.conditions = conditions;
-                this.filename = this.schoolName + gradeItem.enterYear + "级" + classItem.label + "班班级花名册";
+                this.conditions = {schoolCode: this.schoolCode, classNum: classItem._id, isPre: "02"};
+                this.filename = this.userName + classItem._id + name;
                 this.exportExcel();
             },
             async exportExcel () {
@@ -457,6 +457,7 @@
                 'mainstreams',
                 'nameDescDatas',
                 'exportStudentListFields',
+                'userName',
                 'schoolName',
                 'schoolCode',
             ])

@@ -103,6 +103,32 @@ export const find = (model, conditions, fields, options = {}) => {
     })
 }
 
+/**
+ * 公共distinct方法 非关联查找
+ * @param model
+ * @param conditions
+ * @param fields 查找时限定的条件，如顺序，某些字段不查找等
+ * @param options
+ * @param callback
+ */
+export const aggregate = (model, conditions, field, options = {}) => {
+    return new Promise((resolve, reject) => {
+        model.aggregate([{ $match: conditions },{ $group: { _id: "$"+field, total: { $sum: 1 }} }, { $sort: { _id: 1 } }], function (err, res) {
+            if (err) {
+                console.error('Error: ' + JSON.stringify(err));
+                reject(err);
+                return false;
+            } else {
+                if (res.length != 0) {
+                    console.log('find success!');
+                } else {
+                    console.log('find fail:no this data!');
+                }
+                resolve(res)
+            }
+        })
+    })
+}
 
 /**
  * 公共findOne方法 非关联查找

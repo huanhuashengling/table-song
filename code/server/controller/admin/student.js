@@ -106,5 +106,17 @@ module.exports = {
         }catch(e){
             ctx.sendError(e)
         }
+    },
+
+    async aggregate (ctx, next) {
+        console.log('----------------筛选聚合数据 student/aggregate-----------------------');
+        let schoolCode = ctx.request.query.schoolCode
+        let field = ctx.request.query.field
+        try {
+            let data = await ctx.aggregate(studentModel, {schoolCode: schoolCode}, field )
+            ctx.send(data)
+        }catch(e){
+            ctx.sendError(e)
+        }
     }
 }
