@@ -55,7 +55,7 @@
     "webpack-merge": "^4.1.1"
   },
   "dependencies": {
-    "axios": "^0.17.0",
+    "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "busboy": "^0.2.14",
     "element-china-area-data": "^4.1.1",
