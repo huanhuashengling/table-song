@@ -71,7 +71,7 @@
     "koa-static": "^4.0.2",
     "log4js": "^2.4.1",
     "marked": "^0.3.12",
-    "mongoose": "^4.13.9",
+    "mongoose": "^5.7.5",
     "nprogress": "^0.2.0",
     "print-js": "^1.0.54",
     "qs": "^6.5.1",
